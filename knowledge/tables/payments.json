@@ -1,0 +1,51 @@
+{
+    "table_name": "ecommerce.payments",
+    "table_description": "Payment records linked to orders. Tracks payment method, amount, and status.",
+    "use_cases": [
+        "Revenue by payment method",
+        "Payment success rate",
+        "Failed payment analysis",
+        "Payment timing"
+    ],
+    "data_quality_notes": [
+        "status values: 'Success', 'Failed', 'Pending'",
+        "payment_method values: 'Credit Card', 'PayPal', 'Bank Transfer', 'Stripe'",
+        "Cancelled orders typically have payment status 'Failed'",
+        "Pending orders may have payment status 'Pending' (~50% chance)",
+        "amount matches the order's total_amount",
+        "payment_date is order_date + 1-60 minutes",
+        "One payment per order"
+    ],
+    "table_columns": [
+        {
+            "name": "payment_id",
+            "type": "SERIAL",
+            "description": "Primary key"
+        },
+        {
+            "name": "order_id",
+            "type": "INTEGER",
+            "description": "FK to orders(order_id)"
+        },
+        {
+            "name": "payment_date",
+            "type": "TIMESTAMP",
+            "description": "When payment was processed"
+        },
+        {
+            "name": "amount",
+            "type": "DECIMAL(12,2)",
+            "description": "Payment amount in dollars"
+        },
+        {
+            "name": "payment_method",
+            "type": "VARCHAR(50)",
+            "description": "Credit Card, PayPal, Bank Transfer, or Stripe"
+        },
+        {
+            "name": "status",
+            "type": "VARCHAR(50)",
+            "description": "Payment status: Success, Failed, Pending"
+        }
+    ]
+}

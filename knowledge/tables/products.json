@@ -1,0 +1,49 @@
+{
+    "table_name": "ecommerce.products",
+    "table_description": "Product catalog with pricing and inventory. Each product belongs to one category.",
+    "use_cases": [
+        "Product revenue analysis",
+        "Inventory management",
+        "Price distribution",
+        "Top/bottom sellers"
+    ],
+    "data_quality_notes": [
+        "price is DECIMAL(10,2) — monetary values, use SUM/AVG carefully",
+        "stock_quantity is current inventory count",
+        "category_id is a FK to categories table",
+        "~50 products seeded, prices range from $10 to $1000",
+        "Product names are generated (catch phrases) — not real product names"
+    ],
+    "table_columns": [
+        {
+            "name": "product_id",
+            "type": "SERIAL",
+            "description": "Primary key"
+        },
+        {
+            "name": "name",
+            "type": "VARCHAR(100)",
+            "description": "Product name"
+        },
+        {
+            "name": "description",
+            "type": "TEXT",
+            "description": "Product description"
+        },
+        {
+            "name": "price",
+            "type": "DECIMAL(10,2)",
+            "description": "Unit price in dollars"
+        },
+        {
+            "name": "stock_quantity",
+            "type": "INTEGER",
+            "description": "Current stock count"
+        },
+        {
+            "name": "category_id",
+            "type": "INTEGER",
+            "description": "FK to categories(category_id)"
+        }
+    ]
+}

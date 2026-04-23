@@ -1,0 +1,20 @@
+# Strands Agents
+strands-agents[openai]
+strands-agents-tools
+
+# UI
+streamlit
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Vector store
+chromadb
+
+# Azure OpenAI
+openai
+
+# Utilities
+python-dotenv
+pandas

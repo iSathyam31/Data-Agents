@@ -1,0 +1,31 @@
+{
+    "table_name": "ecommerce.categories",
+    "table_description": "Product categories (10 categories: Electronics, Fashion, Home & Garden, Beauty, Sports, Books, Toys, Health, Automotive, Grocery).",
+    "use_cases": [
+        "Revenue by category",
+        "Product mix analysis",
+        "Category performance"
+    ],
+    "data_quality_notes": [
+        "10 fixed categories seeded",
+        "name is NOT NULL",
+        "Used as FK in products table via category_id"
+    ],
+    "table_columns": [
+        {
+            "name": "category_id",
+            "type": "SERIAL",
+            "description": "Primary key"
+        },
+        {
+            "name": "name",
+            "type": "VARCHAR(50)",
+            "description": "Category name"
+        },
+        {
+            "name": "description",
+            "type": "TEXT",
+            "description": "Category description"
+        }
+    ]
+}
