@@ -1,0 +1,43 @@
+{
+    "table_name": "rooms",
+    "table_description": "Individual patient rooms within a ward",
+    "use_cases": [
+        "Bed availability",
+        "Room rate analysis"
+    ],
+    "data_quality_notes": [
+        "Daily_Rate is the base price before procedures/medications."
+    ],
+    "table_columns": [
+        {
+            "name": "Room_ID",
+            "type": "INT",
+            "description": "Primary key"
+        },
+        {
+            "name": "Ward_ID",
+            "type": "INT",
+            "description": "Foreign key to wards"
+        },
+        {
+            "name": "Room_Number",
+            "type": "VARCHAR(20)",
+            "description": "Physical room identifier"
+        },
+        {
+            "name": "Bed_Count",
+            "type": "INT",
+            "description": "Number of beds in room"
+        },
+        {
+            "name": "Is_Available",
+            "type": "BOOLEAN",
+            "description": "If room is active for admissions"
+        },
+        {
+            "name": "Daily_Rate",
+            "type": "NUMBER(10,2)",
+            "description": "Cost per day"
+        }
+    ]
+}

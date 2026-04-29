@@ -1,0 +1,48 @@
+{
+    "table_name": "doctors",
+    "table_description": "Medical staff and their specialties",
+    "use_cases": [
+        "Doctor performance tracking",
+        "Departmental staffing"
+    ],
+    "data_quality_notes": [
+        "Hire_Date is always set. Phone and Email can be NULL."
+    ],
+    "table_columns": [
+        {
+            "name": "Doctor_ID",
+            "type": "INT",
+            "description": "Primary key"
+        },
+        {
+            "name": "Department_ID",
+            "type": "INT",
+            "description": "Foreign key to departments"
+        },
+        {
+            "name": "First_Name",
+            "type": "VARCHAR(50)",
+            "description": "Doctor's first name"
+        },
+        {
+            "name": "Last_Name",
+            "type": "VARCHAR(50)",
+            "description": "Doctor's last name"
+        },
+        {
+            "name": "Specialty",
+            "type": "VARCHAR(100)",
+            "description": "Medical specialty"
+        },
+        {
+            "name": "License_Number",
+            "type": "VARCHAR(50)",
+            "description": "Unique medical license"
+        },
+        {
+            "name": "Hire_Date",
+            "type": "DATE",
+            "description": "When doctor joined hospital"
+        }
+    ]
+}

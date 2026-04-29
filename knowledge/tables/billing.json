@@ -1,0 +1,53 @@
+{
+    "table_name": "billing",
+    "table_description": "Invoices and financial tracking for patients",
+    "use_cases": [
+        "Revenue tracking",
+        "Unpaid balance tracking"
+    ],
+    "data_quality_notes": [
+        "Total_Amount = Insurance_Covered + Patient_Owed. Status 'Unpaid' means revenue is not yet realized."
+    ],
+    "table_columns": [
+        {
+            "name": "Bill_ID",
+            "type": "INT",
+            "description": "Primary key"
+        },
+        {
+            "name": "Patient_ID",
+            "type": "INT",
+            "description": "Foreign key to patients"
+        },
+        {
+            "name": "Admission_ID",
+            "type": "INT",
+            "description": "Linked admission (NULL if outpatient)"
+        },
+        {
+            "name": "Appointment_ID",
+            "type": "INT",
+            "description": "Linked appointment (NULL if admission billing)"
+        },
+        {
+            "name": "Total_Amount",
+            "type": "NUMBER(10,2)",
+            "description": "Total cost of service"
+        },
+        {
+            "name": "Insurance_Covered",
+            "type": "NUMBER(10,2)",
+            "description": "Amount covered by insurance"
+        },
+        {
+            "name": "Patient_Owed",
+            "type": "NUMBER(10,2)",
+            "description": "Amount owed by patient out-of-pocket"
+        },
+        {
+            "name": "Status",
+            "type": "VARCHAR(20)",
+            "description": "'Unpaid', 'Partial', 'Paid'"
+        }
+    ]
+}

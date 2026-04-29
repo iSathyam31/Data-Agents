@@ -1,0 +1,38 @@
+{
+    "table_name": "test_results",
+    "table_description": "Outcomes of lab tests performed on patients",
+    "use_cases": [
+        "Abnormality rates",
+        "Test volume tracking"
+    ],
+    "data_quality_notes": [
+        "Is_Abnormal is a BOOLEAN flag for quick filtering."
+    ],
+    "table_columns": [
+        {
+            "name": "Result_ID",
+            "type": "INT",
+            "description": "Primary key"
+        },
+        {
+            "name": "Patient_ID",
+            "type": "INT",
+            "description": "Foreign key to patients"
+        },
+        {
+            "name": "Test_ID",
+            "type": "INT",
+            "description": "Foreign key to lab_tests"
+        },
+        {
+            "name": "Result_Value",
+            "type": "VARCHAR(100)",
+            "description": "Recorded result"
+        },
+        {
+            "name": "Is_Abnormal",
+            "type": "BOOLEAN",
+            "description": "True if result is out of normal range"
+        }
+    ]
+}

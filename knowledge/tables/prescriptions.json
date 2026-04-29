@@ -1,0 +1,43 @@
+{
+    "table_name": "prescriptions",
+    "table_description": "Medications prescribed to patients",
+    "use_cases": [
+        "Most prescribed drugs",
+        "Pharmacy demand prediction"
+    ],
+    "data_quality_notes": [
+        "Linked to Medical_Records, not directly to Patients."
+    ],
+    "table_columns": [
+        {
+            "name": "Prescription_ID",
+            "type": "INT",
+            "description": "Primary key"
+        },
+        {
+            "name": "Medical_Record_ID",
+            "type": "INT",
+            "description": "Foreign key to medical_records"
+        },
+        {
+            "name": "Medication_ID",
+            "type": "INT",
+            "description": "Foreign key to medications"
+        },
+        {
+            "name": "Dosage",
+            "type": "VARCHAR(50)",
+            "description": "Dosage instructions"
+        },
+        {
+            "name": "Frequency",
+            "type": "VARCHAR(50)",
+            "description": "How often to take"
+        },
+        {
+            "name": "Duration_Days",
+            "type": "INT",
+            "description": "How many days to take"
+        }
+    ]
+}
