@@ -1,19 +1,9 @@
 """Tool: Execute SQL statements scoped to the dash schema (for the Engineer)."""
 
-import re
-
 from strands import tool
 from sqlalchemy import text
 
 from dash_strands.db import get_write_engine
-
-
-# Patterns that target schemas other than 'dash'
-_BLOCKED_PATTERNS = [
-    re.compile(r"\b(DROP|ALTER|TRUNCATE|DELETE|INSERT|UPDATE)\b.*\becommerce\.", re.IGNORECASE),
-    re.compile(r"\b(DROP|ALTER|TRUNCATE|DELETE|INSERT|UPDATE)\b.*\bpublic\.", re.IGNORECASE),
-    re.compile(r"\bDROP\s+SCHEMA\b", re.IGNORECASE),
-]
 
 
 @tool
@@ -30,15 +20,6 @@ def execute_sql_dash(sql: str) -> str:
     Returns:
         Confirmation message or query results, or an error message.
     """
-    # Block writes to non-dash schemas
-    for pattern in _BLOCKED_PATTERNS:
-        if pattern.search(sql):
-            return (
-                "BLOCKED: This statement appears to modify the 'ecommerce' or 'public' schema. "
-                "You can only create/modify objects in the 'dash' schema. "
-                "Use 'dash.' prefix for all DDL/DML statements."
-            )
-
     engine = get_write_engine()
     try:
         with engine.connect() as conn:

@@ -9,12 +9,15 @@ from dotenv import load_dotenv
 _project_root = Path(__file__).resolve().parent.parent.parent
 load_dotenv(_project_root / ".env")
 
-# --- PostgreSQL ---
-DB_HOST = os.getenv("PGHOST", "localhost")
-DB_PORT = os.getenv("PGPORT", "5432")
-DB_USER = os.getenv("PGUSER", "postgres")
-DB_PASS = os.getenv("PGPASSWORD", "")
-DB_DATABASE = os.getenv("PGDATABASE", "postgres")
+# --- Snowflake ---
+SF_ACCOUNT = os.getenv("SF_ACCOUNT", "")
+SF_USER = os.getenv("SF_USER", "")
+SF_PASSWORD = os.getenv("SF_PASSWORD", "")
+SF_DATABASE = os.getenv("SF_DATABASE", "HOSPITAL_DB")
+SF_SCHEMA = os.getenv("SF_SCHEMA", "healthcare")
+SF_WAREHOUSE = os.getenv("SF_WAREHOUSE", "COMPUTE_WH")
+SF_ROLE_ANALYST = os.getenv("SF_ROLE_ANALYST", "dash_analyst_role")
+SF_ROLE_ENGINEER = os.getenv("SF_ROLE_ENGINEER", "dash_engineer_role")
 
 # --- Azure OpenAI (Chat) ---
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "")
@@ -33,5 +36,5 @@ EMBEDDING_API_VERSION = os.getenv("EMBEDDING_API_VERSION", "2024-02-01")
 CHROMA_PATH = os.getenv("CHROMA_PATH", str(_project_root / "chroma_data"))
 
 # --- Schemas ---
-DATA_SCHEMA = "ecommerce"
+DATA_SCHEMA = os.getenv("SF_SCHEMA", "healthcare")
 DASH_SCHEMA = "dash"
