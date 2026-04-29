@@ -116,11 +116,11 @@ INSERT INTO lab_tests (Test_ID, Test_Name, Cost, Normal_Range) VALUES
 (4, 'X-Ray (Leg)', 200.00, 'No fracture');
 
 -- 15. Insert Test Results
-INSERT INTO test_results (Result_ID, Patient_ID, Test_ID, Result_Value, Is_Abnormal) VALUES 
-(1, 1, 3, 'Irregular rhythm detected', TRUE),
-(2, 4, 4, 'Clear oblique fracture of tibia', TRUE),
-(3, 3, 4, 'No fracture', FALSE),
-(4, 5, 1, 'All normal limits', FALSE);
+INSERT INTO test_results (Result_ID, Patient_ID, Doctor_ID, Test_ID, Result_Value, Is_Abnormal) VALUES 
+(1, 1, 1, 3, 'Irregular rhythm detected', TRUE),
+(2, 4, 2, 4, 'Clear oblique fracture of tibia', TRUE),
+(3, 3, 2, 4, 'No fracture', FALSE),
+(4, 5, 1, 1, 'All normal limits', FALSE);
 
 -- 16. Insert Billing
 INSERT INTO billing (Bill_ID, Patient_ID, Admission_ID, Appointment_ID, Total_Amount, Insurance_Covered, Patient_Owed, Status) VALUES 
