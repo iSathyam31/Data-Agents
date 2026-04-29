@@ -1,0 +1,19 @@
+[project]
+name = "dash-v2-strands-agents"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "chromadb>=1.5.8",
+    "openai>=2.33.0",
+    "pandas>=3.0.2",
+    "psycopg2-binary>=2.9.12",
+    "python-dotenv>=1.2.2",
+    "snowflake-connector-python>=4.4.0",
+    "snowflake-sqlalchemy>=1.9.0",
+    "sqlalchemy>=2.0.49",
+    "strands-agents-tools>=0.5.1",
+    "strands-agents[openai]>=1.37.0",
+    "streamlit>=1.57.0",
+]

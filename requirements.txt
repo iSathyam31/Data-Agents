@@ -7,7 +7,8 @@ streamlit
 
 # Database
 sqlalchemy
-psycopg2-binary
+snowflake-sqlalchemy
+snowflake-connector-python
 
 # Vector store
 chromadb
