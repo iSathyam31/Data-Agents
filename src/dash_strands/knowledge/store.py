@@ -11,9 +11,9 @@ class AzureEmbeddingFunction(chromadb.EmbeddingFunction):
 
     def __init__(self):
         self.client = AzureOpenAI(
-            api_key=config.EMBEDDING_API_KEY,
-            azure_endpoint=config.EMBEDDING_ENDPOINT,
-            api_version=config.EMBEDDING_API_VERSION,
+            api_key=config.AZURE_OPENAI_API_KEY,
+            azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
+            api_version=config.AZURE_OPENAI_API_VERSION,
         )
         self.model = config.EMBEDDING_DEPLOYMENT
 

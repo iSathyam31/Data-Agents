@@ -29,11 +29,11 @@ def list_schemas() -> str:
 
 
 @tool
-def list_tables(schema_name: str = "healthcare") -> str:
+def list_tables(schema_name: str = "TPCDS_SF100TCL") -> str:
     """List all tables and views in a given schema.
 
     Args:
-        schema_name: Schema name to inspect. Defaults to 'healthcare'.
+        schema_name: Schema name to inspect. Defaults to 'TPCDS_SF100TCL'.
 
     Returns:
         List of tables/views with their types.
@@ -57,12 +57,12 @@ def list_tables(schema_name: str = "healthcare") -> str:
 
 
 @tool
-def describe_table(table_name: str, schema_name: str = "healthcare") -> str:
+def describe_table(table_name: str, schema_name: str = "TPCDS_SF100TCL") -> str:
     """Get column details for a specific table.
 
     Args:
         table_name: Name of the table to describe.
-        schema_name: Schema the table belongs to. Defaults to 'healthcare'.
+        schema_name: Schema the table belongs to. Defaults to 'TPCDS_SF100TCL'.
 
     Returns:
         Column names, types, and nullable info.
