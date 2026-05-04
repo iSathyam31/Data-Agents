@@ -1,0 +1,89 @@
+{
+    "table_name": "WAREHOUSE",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.WAREHOUSE",
+    "table_description": "Dimension table for distribution warehouses. Each row is one warehouse location. Referenced by CATALOG_SALES, WEB_SALES, and INVENTORY fact tables. Used to analyze fulfillment performance and inventory distribution across warehouses.",
+    "use_cases": [
+        "Warehouse order volume and fulfillment analysis",
+        "Inventory levels by warehouse",
+        "Geographic distribution of fulfillment centers",
+        "Warehouse capacity analysis"
+    ],
+    "data_quality_notes": [
+        "W_WAREHOUSE_SQ_FT is warehouse floor space in square feet.",
+        "W_GMT_OFFSET is the warehouse timezone offset from GMT.",
+        "This is a small, stable dimension — no SCD versioning."
+    ],
+    "table_columns": [
+        {
+            "name": "W_WAREHOUSE_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by CATALOG_SALES.CS_WAREHOUSE_SK, WEB_SALES.WS_WAREHOUSE_SK, INVENTORY.INV_WAREHOUSE_SK."
+        },
+        {
+            "name": "W_WAREHOUSE_ID",
+            "type": "VARCHAR",
+            "description": "Business key."
+        },
+        {
+            "name": "W_WAREHOUSE_NAME",
+            "type": "VARCHAR",
+            "description": "Warehouse name."
+        },
+        {
+            "name": "W_WAREHOUSE_SQ_FT",
+            "type": "NUMBER",
+            "description": "Warehouse size in square feet."
+        },
+        {
+            "name": "W_STREET_NUMBER",
+            "type": "VARCHAR",
+            "description": "Address street number."
+        },
+        {
+            "name": "W_STREET_NAME",
+            "type": "VARCHAR",
+            "description": "Street name."
+        },
+        {
+            "name": "W_STREET_TYPE",
+            "type": "VARCHAR",
+            "description": "Street type."
+        },
+        {
+            "name": "W_SUITE_NUMBER",
+            "type": "VARCHAR",
+            "description": "Suite number."
+        },
+        {
+            "name": "W_CITY",
+            "type": "VARCHAR",
+            "description": "City."
+        },
+        {
+            "name": "W_COUNTY",
+            "type": "VARCHAR",
+            "description": "County."
+        },
+        {
+            "name": "W_STATE",
+            "type": "VARCHAR",
+            "description": "State code."
+        },
+        {
+            "name": "W_ZIP",
+            "type": "VARCHAR",
+            "description": "ZIP code."
+        },
+        {
+            "name": "W_COUNTRY",
+            "type": "VARCHAR",
+            "description": "Country."
+        },
+        {
+            "name": "W_GMT_OFFSET",
+            "type": "FLOAT",
+            "description": "GMT timezone offset."
+        }
+    ]
+}

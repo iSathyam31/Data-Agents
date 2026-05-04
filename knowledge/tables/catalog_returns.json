@@ -1,0 +1,158 @@
+{
+    "table_name": "CATALOG_RETURNS",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CATALOG_RETURNS",
+    "table_description": "Fact table recording every item returned from catalog channel orders. Each row is one returned line item. At SF100TCL scale contains approximately 16 billion rows. Like CATALOG_SALES, it tracks both the refunded customer and the returning customer, which can differ.",
+    "use_cases": [
+        "Catalog channel return rate analysis",
+        "Return reason tracking for catalog orders",
+        "Net catalog revenue (sales minus returns)",
+        "Refund method analysis (cash vs store credit vs charge reversal)",
+        "Return-to-sales ratio by item, category, or call center",
+        "Warehouse and shipping mode impact on returns"
+    ],
+    "data_quality_notes": [
+        "CR_RETURNED_DATE_SK can be NULL.",
+        "CR_REFUNDED_CUSTOMER_SK is who gets the refund; CR_RETURNING_CUSTOMER_SK is who physically returns the item — they can differ.",
+        "CR_ORDER_NUMBER links to CATALOG_SALES.CS_ORDER_NUMBER for return-to-sale matching.",
+        "CR_NET_LOSS is the financial loss metric — includes refunded amounts minus any fees recovered.",
+        "Refund can go to CR_REFUNDED_CASH, CR_REVERSED_CHARGE, or CR_STORE_CREDIT — these are not mutually exclusive, sum them for total refund."
+    ],
+    "table_columns": [
+        {
+            "name": "CR_RETURNED_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM. Return date. Can be NULL."
+        },
+        {
+            "name": "CR_RETURNED_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM. Return time."
+        },
+        {
+            "name": "CR_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM. Part of composite primary key with CR_ORDER_NUMBER."
+        },
+        {
+            "name": "CR_REFUNDED_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Customer receiving the refund."
+        },
+        {
+            "name": "CR_REFUNDED_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS. Demographics of refunded customer."
+        },
+        {
+            "name": "CR_REFUNDED_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "CR_REFUNDED_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS. Address of refunded customer."
+        },
+        {
+            "name": "CR_RETURNING_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Customer physically returning the item. May differ from refunded customer."
+        },
+        {
+            "name": "CR_RETURNING_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS."
+        },
+        {
+            "name": "CR_RETURNING_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "CR_RETURNING_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS."
+        },
+        {
+            "name": "CR_CALL_CENTER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CALL_CENTER. Call center handling the return."
+        },
+        {
+            "name": "CR_CATALOG_PAGE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CATALOG_PAGE. Page the original purchase was on."
+        },
+        {
+            "name": "CR_SHIP_MODE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to SHIP_MODE."
+        },
+        {
+            "name": "CR_WAREHOUSE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WAREHOUSE."
+        },
+        {
+            "name": "CR_REASON_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to REASON. Why the item was returned."
+        },
+        {
+            "name": "CR_ORDER_NUMBER",
+            "type": "NUMBER",
+            "description": "Original order number. Links to CATALOG_SALES.CS_ORDER_NUMBER."
+        },
+        {
+            "name": "CR_RETURN_QUANTITY",
+            "type": "NUMBER",
+            "description": "Units returned."
+        },
+        {
+            "name": "CR_RETURN_AMOUNT",
+            "type": "FLOAT",
+            "description": "Gross return value."
+        },
+        {
+            "name": "CR_RETURN_TAX",
+            "type": "FLOAT",
+            "description": "Tax portion of return."
+        },
+        {
+            "name": "CR_RETURN_AMT_INC_TAX",
+            "type": "FLOAT",
+            "description": "Return amount including tax."
+        },
+        {
+            "name": "CR_FEE",
+            "type": "FLOAT",
+            "description": "Processing/restocking fee."
+        },
+        {
+            "name": "CR_RETURN_SHIP_COST",
+            "type": "FLOAT",
+            "description": "Return shipping cost."
+        },
+        {
+            "name": "CR_REFUNDED_CASH",
+            "type": "FLOAT",
+            "description": "Cash refunded to customer."
+        },
+        {
+            "name": "CR_REVERSED_CHARGE",
+            "type": "FLOAT",
+            "description": "Credit card reversal amount."
+        },
+        {
+            "name": "CR_STORE_CREDIT",
+            "type": "FLOAT",
+            "description": "Store credit issued."
+        },
+        {
+            "name": "CR_NET_LOSS",
+            "type": "FLOAT",
+            "description": "Net financial loss to retailer from this return."
+        }
+    ]
+}

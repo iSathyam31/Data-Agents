@@ -1,0 +1,65 @@
+{
+    "table_name": "CATALOG_PAGE",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CATALOG_PAGE",
+    "table_description": "Dimension table for catalog pages (physical or digital catalogs). Each row represents a specific page in a specific catalog number. Referenced by CATALOG_SALES.CS_CATALOG_PAGE_SK to identify which catalog page an item was ordered from. Used to measure per-catalog and per-page performance.",
+    "use_cases": [
+        "Catalog page revenue and order volume",
+        "Department-level catalog performance",
+        "Catalog edition comparison (by CP_CATALOG_NUMBER)",
+        "Page type effectiveness analysis"
+    ],
+    "data_quality_notes": [
+        "CP_CATALOG_NUMBER identifies the catalog edition (issue number).",
+        "CP_CATALOG_PAGE_NUMBER is the physical page number within that catalog.",
+        "CP_START_DATE_SK and CP_END_DATE_SK define when this catalog was active.",
+        "CP_DEPARTMENT is the merchandising department for this page."
+    ],
+    "table_columns": [
+        {
+            "name": "CP_CATALOG_PAGE_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by CATALOG_SALES.CS_CATALOG_PAGE_SK."
+        },
+        {
+            "name": "CP_CATALOG_PAGE_ID",
+            "type": "VARCHAR",
+            "description": "Business key."
+        },
+        {
+            "name": "CP_START_DATE_SK",
+            "type": "NUMBER",
+            "description": "FK to DATE_DIM. When this catalog page became active."
+        },
+        {
+            "name": "CP_END_DATE_SK",
+            "type": "NUMBER",
+            "description": "FK to DATE_DIM. When this catalog page expired."
+        },
+        {
+            "name": "CP_DEPARTMENT",
+            "type": "VARCHAR",
+            "description": "Merchandising department for this catalog page."
+        },
+        {
+            "name": "CP_CATALOG_NUMBER",
+            "type": "NUMBER",
+            "description": "Catalog edition/issue number. Groups pages from the same catalog print run."
+        },
+        {
+            "name": "CP_CATALOG_PAGE_NUMBER",
+            "type": "NUMBER",
+            "description": "Physical page number within the catalog."
+        },
+        {
+            "name": "CP_DESCRIPTION",
+            "type": "VARCHAR",
+            "description": "Free-text description of the catalog page content."
+        },
+        {
+            "name": "CP_TYPE",
+            "type": "VARCHAR",
+            "description": "Page type classification."
+        }
+    ]
+}

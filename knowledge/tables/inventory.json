@@ -1,0 +1,45 @@
+{
+    "table_name": "INVENTORY",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.INVENTORY",
+    "table_description": "Fact table recording quantity on hand for each item at each warehouse on each date. A simple 4-column table but at SF100TCL scale it contains approximately 12 billion rows because it captures a weekly snapshot for every item-warehouse combination across 5 years. Used for inventory analysis, stockout detection, and supply chain queries.",
+    "use_cases": [
+        "Current inventory levels by warehouse or item",
+        "Stockout detection (zero quantity on hand)",
+        "Inventory trend over time",
+        "Warehouse capacity utilization",
+        "Item availability analysis before running promotions",
+        "Low-stock alerts by category"
+    ],
+    "data_quality_notes": [
+        "INVENTORY is a periodic snapshot table — each row represents quantity on hand on a specific date, not a transaction. Do NOT sum INV_QUANTITY_ON_HAND across dates for the same item.",
+        "To find current inventory: filter on the most recent INV_DATE_SK for each item-warehouse combination.",
+        "INV_QUANTITY_ON_HAND of 0 means stockout. NULL means the measurement was not taken.",
+        "The table is indexed on (INV_DATE_SK, INV_ITEM_SK, INV_WAREHOUSE_SK) — always include all three in filters for best performance.",
+        "Join to DATE_DIM using INV_DATE_SK = D_DATE_SK.",
+        "Join to ITEM using INV_ITEM_SK = I_ITEM_SK.",
+        "Join to WAREHOUSE using INV_WAREHOUSE_SK = W_WAREHOUSE_SK."
+    ],
+    "table_columns": [
+        {
+            "name": "INV_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM.D_DATE_SK. Date of the inventory snapshot. Part of composite primary key."
+        },
+        {
+            "name": "INV_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM.I_ITEM_SK. Which item. Part of composite primary key."
+        },
+        {
+            "name": "INV_WAREHOUSE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WAREHOUSE.W_WAREHOUSE_SK. Which warehouse. Part of composite primary key."
+        },
+        {
+            "name": "INV_QUANTITY_ON_HAND",
+            "type": "NUMBER",
+            "description": "Units on hand at this warehouse for this item on this date. NULL means unmeasured, 0 means stockout."
+        }
+    ]
+}

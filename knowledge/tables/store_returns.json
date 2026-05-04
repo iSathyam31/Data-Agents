@@ -1,0 +1,125 @@
+{
+    "table_name": "STORE_RETURNS",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.STORE_RETURNS",
+    "table_description": "Fact table recording every item returned to a physical store. Each row is one returned line item. At SF100TCL scale this contains approximately 30 billion rows. Return transactions reference the original STORE_SALES ticket number, allowing return-to-sale matching.",
+    "use_cases": [
+        "Return rate analysis by category, brand, or item",
+        "Store-level return volume and value",
+        "Return reason analysis using REASON dimension",
+        "Net revenue calculation (sales minus returns)",
+        "Customer return behavior profiling",
+        "Financial impact of returns (refunded cash, store credit, reversed charges)"
+    ],
+    "data_quality_notes": [
+        "SR_RETURNED_DATE_SK can be NULL — filter carefully for date-bounded analyses.",
+        "SR_TICKET_NUMBER links back to STORE_SALES.SS_TICKET_NUMBER for matching returns to original sales.",
+        "SR_CUSTOMER_SK can be NULL for anonymous returns.",
+        "SR_RETURN_AMT is the gross return amount. SR_NET_LOSS is the net financial loss including fees.",
+        "SR_STORE_CREDIT is granted store credit, SR_REFUNDED_CASH is actual cash back — these are mutually exclusive in most cases.",
+        "SR_REASON_SK joins to REASON table for why the item was returned.",
+        "Return rate = SUM(SR_RETURN_QUANTITY) / SUM(SS_QUANTITY) when joined with STORE_SALES."
+    ],
+    "table_columns": [
+        {
+            "name": "SR_RETURNED_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM.D_DATE_SK. Date of return. Can be NULL."
+        },
+        {
+            "name": "SR_RETURN_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM.T_TIME_SK. Time the return was processed. Can be NULL."
+        },
+        {
+            "name": "SR_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM.I_ITEM_SK. Part of composite primary key with SR_TICKET_NUMBER."
+        },
+        {
+            "name": "SR_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER.C_CUSTOMER_SK. Customer making the return. Can be NULL."
+        },
+        {
+            "name": "SR_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS.CD_DEMO_SK."
+        },
+        {
+            "name": "SR_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS.HD_DEMO_SK."
+        },
+        {
+            "name": "SR_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS.CA_ADDRESS_SK. Customer address."
+        },
+        {
+            "name": "SR_STORE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to STORE.S_STORE_SK. Store where the return occurred."
+        },
+        {
+            "name": "SR_REASON_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to REASON.R_REASON_SK. Reason code for the return."
+        },
+        {
+            "name": "SR_TICKET_NUMBER",
+            "type": "NUMBER",
+            "description": "Original sale ticket number. Links to STORE_SALES.SS_TICKET_NUMBER."
+        },
+        {
+            "name": "SR_RETURN_QUANTITY",
+            "type": "NUMBER",
+            "description": "Number of units returned."
+        },
+        {
+            "name": "SR_RETURN_AMT",
+            "type": "FLOAT",
+            "description": "Gross return amount before fees. Primary return value field."
+        },
+        {
+            "name": "SR_RETURN_TAX",
+            "type": "FLOAT",
+            "description": "Tax portion of the return amount."
+        },
+        {
+            "name": "SR_RETURN_AMT_INC_TAX",
+            "type": "FLOAT",
+            "description": "Total return amount including tax."
+        },
+        {
+            "name": "SR_FEE",
+            "type": "FLOAT",
+            "description": "Restocking or processing fee charged to customer on return."
+        },
+        {
+            "name": "SR_RETURN_SHIP_COST",
+            "type": "FLOAT",
+            "description": "Shipping cost associated with the return."
+        },
+        {
+            "name": "SR_REFUNDED_CASH",
+            "type": "FLOAT",
+            "description": "Cash refunded to customer."
+        },
+        {
+            "name": "SR_REVERSED_CHARGE",
+            "type": "FLOAT",
+            "description": "Credit card charge reversal amount."
+        },
+        {
+            "name": "SR_STORE_CREDIT",
+            "type": "FLOAT",
+            "description": "Store credit issued instead of cash refund."
+        },
+        {
+            "name": "SR_NET_LOSS",
+            "type": "FLOAT",
+            "description": "Net financial loss to the retailer from this return. Key metric for return impact analysis."
+        }
+    ]
+}

@@ -1,0 +1,198 @@
+{
+    "table_name": "CATALOG_SALES",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CATALOG_SALES",
+    "table_description": "Fact table recording every line-item purchase made through the catalog channel (phone orders, mail orders). This is a complex fact table with ~34 columns — it tracks both the billing customer and a separate ship-to customer, call center handling, catalog page, shipping mode, and warehouse. At SF100TCL scale this contains approximately 144 billion rows.",
+    "use_cases": [
+        "Catalog channel revenue and profit analysis",
+        "Call center performance and sales attribution",
+        "Shipping mode preference and cost analysis",
+        "Billing vs shipping address geography comparisons",
+        "Catalog page and catalog number effectiveness",
+        "Warehouse fulfillment analysis",
+        "Cross-channel comparison with store and web sales"
+    ],
+    "data_quality_notes": [
+        "CS_SOLD_DATE_SK can be NULL — always handle NULLs in date joins.",
+        "CATALOG_SALES has BOTH a billing customer (CS_BILL_CUSTOMER_SK) and a shipping customer (CS_SHIP_CUSTOMER_SK) — they can differ (gift orders). Use CS_BILL_CUSTOMER_SK for revenue attribution.",
+        "CS_ORDER_NUMBER groups multiple line items into one order — use it to count distinct orders.",
+        "CS_NET_PROFIT can be negative (sold below cost).",
+        "CS_EXT_SHIP_COST is additional shipping cost on top of the item price — include it when calculating total order cost.",
+        "This table is partitioned on CS_SOLD_DATE_SK — always include a date filter.",
+        "Join to CALL_CENTER using CS_CALL_CENTER_SK = CC_CALL_CENTER_SK.",
+        "Join to CATALOG_PAGE using CS_CATALOG_PAGE_SK = CP_CATALOG_PAGE_SK.",
+        "Join to WAREHOUSE using CS_WAREHOUSE_SK = W_WAREHOUSE_SK."
+    ],
+    "table_columns": [
+        {
+            "name": "CS_SOLD_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM.D_DATE_SK. Sale date. Can be NULL."
+        },
+        {
+            "name": "CS_SOLD_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM.T_TIME_SK. Time of sale."
+        },
+        {
+            "name": "CS_SHIP_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM.D_DATE_SK. Date item was shipped. Can differ from sale date."
+        },
+        {
+            "name": "CS_BILL_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER.C_CUSTOMER_SK. Customer who was billed. Use for revenue attribution."
+        },
+        {
+            "name": "CS_BILL_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS.CD_DEMO_SK. Demographics of billing customer."
+        },
+        {
+            "name": "CS_BILL_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS.HD_DEMO_SK. Household demographics of billing customer."
+        },
+        {
+            "name": "CS_BILL_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS.CA_ADDRESS_SK. Billing address."
+        },
+        {
+            "name": "CS_SHIP_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER.C_CUSTOMER_SK. Customer receiving the shipment. Can differ from billing customer (gift orders)."
+        },
+        {
+            "name": "CS_SHIP_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS.CD_DEMO_SK. Demographics of ship-to customer."
+        },
+        {
+            "name": "CS_SHIP_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS.HD_DEMO_SK."
+        },
+        {
+            "name": "CS_SHIP_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS.CA_ADDRESS_SK. Shipping address."
+        },
+        {
+            "name": "CS_CALL_CENTER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CALL_CENTER.CC_CALL_CENTER_SK. Call center that processed the order."
+        },
+        {
+            "name": "CS_CATALOG_PAGE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CATALOG_PAGE.CP_CATALOG_PAGE_SK. Catalog page the item was ordered from."
+        },
+        {
+            "name": "CS_SHIP_MODE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to SHIP_MODE.SM_SHIP_MODE_SK. Shipping method chosen."
+        },
+        {
+            "name": "CS_WAREHOUSE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WAREHOUSE.W_WAREHOUSE_SK. Warehouse fulfilling the order."
+        },
+        {
+            "name": "CS_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM.I_ITEM_SK. Part of composite primary key with CS_ORDER_NUMBER."
+        },
+        {
+            "name": "CS_PROMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to PROMOTION.P_PROMO_SK. Promotion applied. Can be NULL."
+        },
+        {
+            "name": "CS_ORDER_NUMBER",
+            "type": "NUMBER",
+            "description": "Order number grouping multiple line items. Use COUNT(DISTINCT CS_ORDER_NUMBER) for order counts."
+        },
+        {
+            "name": "CS_QUANTITY",
+            "type": "NUMBER",
+            "description": "Units ordered."
+        },
+        {
+            "name": "CS_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Wholesale cost per unit."
+        },
+        {
+            "name": "CS_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "List price per unit."
+        },
+        {
+            "name": "CS_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Actual selling price per unit."
+        },
+        {
+            "name": "CS_EXT_DISCOUNT_AMT",
+            "type": "FLOAT",
+            "description": "Total discount on this line item."
+        },
+        {
+            "name": "CS_EXT_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Extended sales price = CS_QUANTITY * CS_SALES_PRICE. Primary revenue field."
+        },
+        {
+            "name": "CS_EXT_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Extended wholesale cost."
+        },
+        {
+            "name": "CS_EXT_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "Extended list price."
+        },
+        {
+            "name": "CS_EXT_TAX",
+            "type": "FLOAT",
+            "description": "Tax on this line item."
+        },
+        {
+            "name": "CS_COUPON_AMT",
+            "type": "FLOAT",
+            "description": "Coupon discount applied."
+        },
+        {
+            "name": "CS_EXT_SHIP_COST",
+            "type": "FLOAT",
+            "description": "Shipping cost for this line item. Add to net paid for total order cost."
+        },
+        {
+            "name": "CS_NET_PAID",
+            "type": "FLOAT",
+            "description": "Amount paid after coupons, before tax."
+        },
+        {
+            "name": "CS_NET_PAID_INC_TAX",
+            "type": "FLOAT",
+            "description": "Net paid including tax."
+        },
+        {
+            "name": "CS_NET_PAID_INC_SHIP",
+            "type": "FLOAT",
+            "description": "Net paid including shipping cost."
+        },
+        {
+            "name": "CS_NET_PAID_INC_SHIP_TAX",
+            "type": "FLOAT",
+            "description": "Net paid including both shipping and tax. Total customer payment amount."
+        },
+        {
+            "name": "CS_NET_PROFIT",
+            "type": "FLOAT",
+            "description": "Net profit after all costs. Can be negative."
+        }
+    ]
+}

@@ -1,0 +1,144 @@
+{
+    "table_name": "STORE_SALES",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.STORE_SALES",
+    "table_description": "The primary fact table capturing every individual line-item purchase made at a physical retail store. Each row represents one item sold in one transaction (ticket). At SF100TCL scale this table contains approximately 300 billion rows covering 5 years of sales data across all store locations.",
+    "use_cases": [
+        "Total store revenue and net profit analysis",
+        "Monthly and yearly sales trend analysis",
+        "Store-level performance comparison",
+        "Item/category/brand sales breakdown",
+        "Coupon and discount effectiveness",
+        "Customer purchase behavior at stores",
+        "Tax and pricing analysis"
+    ],
+    "data_quality_notes": [
+        "SS_SOLD_DATE_SK can be NULL for transactions with unknown sale date — always check for NULL when filtering by date.",
+        "SS_CUSTOMER_SK can be NULL for anonymous/cash transactions — do not use it to count unique customers without handling NULLs.",
+        "SS_NET_PROFIT can be negative — this indicates a loss on a line item (discount exceeded margin).",
+        "SS_QUANTITY is the number of units sold; multiply by SS_SALES_PRICE for line-item revenue.",
+        "SS_EXT_SALES_PRICE = SS_QUANTITY * SS_SALES_PRICE — use this for revenue aggregations.",
+        "SS_NET_PAID is after coupons but before tax. SS_NET_PAID_INC_TAX includes tax.",
+        "This table is partitioned on SS_SOLD_DATE_SK — always include a date filter to avoid full scans on 300B rows.",
+        "Join to DATE_DIM using SS_SOLD_DATE_SK = D_DATE_SK for time-based analysis.",
+        "Join to ITEM using SS_ITEM_SK = I_ITEM_SK for product details.",
+        "Join to STORE using SS_STORE_SK = S_STORE_SK for store details."
+    ],
+    "table_columns": [
+        {
+            "name": "SS_SOLD_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM.D_DATE_SK. Can be NULL. Use this for all time-based filtering."
+        },
+        {
+            "name": "SS_SOLD_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM.T_TIME_SK. Time of day the sale occurred. Can be NULL."
+        },
+        {
+            "name": "SS_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM.I_ITEM_SK. Part of composite primary key with SS_TICKET_NUMBER."
+        },
+        {
+            "name": "SS_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER.C_CUSTOMER_SK. NULL for anonymous transactions."
+        },
+        {
+            "name": "SS_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS.CD_DEMO_SK. Demographic profile of buyer."
+        },
+        {
+            "name": "SS_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS.HD_DEMO_SK. Household profile of buyer."
+        },
+        {
+            "name": "SS_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS.CA_ADDRESS_SK. Customer billing address."
+        },
+        {
+            "name": "SS_STORE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to STORE.S_STORE_SK. Which store made the sale."
+        },
+        {
+            "name": "SS_PROMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to PROMOTION.P_PROMO_SK. Promotion applied to this sale. Can be NULL."
+        },
+        {
+            "name": "SS_TICKET_NUMBER",
+            "type": "NUMBER",
+            "description": "Transaction receipt number. Combined with SS_ITEM_SK forms the primary key."
+        },
+        {
+            "name": "SS_QUANTITY",
+            "type": "NUMBER",
+            "description": "Number of units sold for this line item."
+        },
+        {
+            "name": "SS_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Wholesale cost per unit. Used to calculate gross margin."
+        },
+        {
+            "name": "SS_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "Retail list (sticker) price per unit before any discounts."
+        },
+        {
+            "name": "SS_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Actual selling price per unit after discounts but before coupons."
+        },
+        {
+            "name": "SS_EXT_DISCOUNT_AMT",
+            "type": "FLOAT",
+            "description": "Total discount amount for this line item (SS_QUANTITY * discount per unit)."
+        },
+        {
+            "name": "SS_EXT_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Extended sales price = SS_QUANTITY * SS_SALES_PRICE. Primary revenue field."
+        },
+        {
+            "name": "SS_EXT_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Extended wholesale cost = SS_QUANTITY * SS_WHOLESALE_COST."
+        },
+        {
+            "name": "SS_EXT_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "Extended list price = SS_QUANTITY * SS_LIST_PRICE."
+        },
+        {
+            "name": "SS_EXT_TAX",
+            "type": "FLOAT",
+            "description": "Sales tax amount for this line item."
+        },
+        {
+            "name": "SS_COUPON_AMT",
+            "type": "FLOAT",
+            "description": "Coupon value applied to this line item. Reduces net paid."
+        },
+        {
+            "name": "SS_NET_PAID",
+            "type": "FLOAT",
+            "description": "Amount actually paid after coupons but before tax. SS_EXT_SALES_PRICE - SS_COUPON_AMT."
+        },
+        {
+            "name": "SS_NET_PAID_INC_TAX",
+            "type": "FLOAT",
+            "description": "Net paid including tax. SS_NET_PAID + SS_EXT_TAX."
+        },
+        {
+            "name": "SS_NET_PROFIT",
+            "type": "FLOAT",
+            "description": "Profit on this line item. SS_NET_PAID - SS_EXT_WHOLESALE_COST. Can be negative."
+        }
+    ]
+}

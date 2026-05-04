@@ -1,0 +1,87 @@
+{
+    "table_name": "CUSTOMER_ADDRESS",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CUSTOMER_ADDRESS",
+    "table_description": "Dimension table containing postal addresses for customers. Each row is one address record. Customers can have multiple historical addresses but C_CURRENT_ADDR_SK in the CUSTOMER table points to the most recent one. Used for geographic segmentation of sales.",
+    "use_cases": [
+        "Customer geographic distribution by state, city, or country",
+        "Regional sales analysis",
+        "Shipping vs billing address comparison",
+        "Market penetration by geography",
+        "Timezone analysis using GMT offset"
+    ],
+    "data_quality_notes": [
+        "CA_GMT_OFFSET is a numeric offset from GMT (e.g. -5 for EST) — useful for time-zone-aware analysis.",
+        "CA_LOCATION_TYPE values: 'apartment', 'house', 'condo', 'unknown' — can be NULL.",
+        "CA_STATE is a 2-letter US state code for US addresses.",
+        "CA_COUNTRY is 'United States' for most records in this dataset.",
+        "Join using CA_ADDRESS_SK — used in STORE_SALES (SS_ADDR_SK), CATALOG_SALES (CS_BILL_ADDR_SK, CS_SHIP_ADDR_SK), WEB_SALES (WS_BILL_ADDR_SK, WS_SHIP_ADDR_SK)."
+    ],
+    "table_columns": [
+        {
+            "name": "CA_ADDRESS_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by all sales fact tables."
+        },
+        {
+            "name": "CA_ADDRESS_ID",
+            "type": "VARCHAR",
+            "description": "Business key for the address."
+        },
+        {
+            "name": "CA_STREET_NUMBER",
+            "type": "VARCHAR",
+            "description": "Street number."
+        },
+        {
+            "name": "CA_STREET_NAME",
+            "type": "VARCHAR",
+            "description": "Street name."
+        },
+        {
+            "name": "CA_STREET_TYPE",
+            "type": "VARCHAR",
+            "description": "Street type: Ave, Blvd, St, Rd, etc."
+        },
+        {
+            "name": "CA_SUITE_NUMBER",
+            "type": "VARCHAR",
+            "description": "Apartment or suite number. Can be NULL."
+        },
+        {
+            "name": "CA_CITY",
+            "type": "VARCHAR",
+            "description": "City name. Use for city-level geographic analysis."
+        },
+        {
+            "name": "CA_COUNTY",
+            "type": "VARCHAR",
+            "description": "County name."
+        },
+        {
+            "name": "CA_STATE",
+            "type": "VARCHAR",
+            "description": "2-letter state code (US). Use for state-level regional analysis."
+        },
+        {
+            "name": "CA_ZIP",
+            "type": "VARCHAR",
+            "description": "Postal/ZIP code."
+        },
+        {
+            "name": "CA_COUNTRY",
+            "type": "VARCHAR",
+            "description": "Country name. Mostly 'United States' in this dataset."
+        },
+        {
+            "name": "CA_GMT_OFFSET",
+            "type": "FLOAT",
+            "description": "GMT offset as a decimal (e.g. -5.0 for EST). Useful for timezone analysis."
+        },
+        {
+            "name": "CA_LOCATION_TYPE",
+            "type": "VARCHAR",
+            "description": "Type of residence: apartment, house, condo, unknown. Can be NULL."
+        }
+    ]
+}

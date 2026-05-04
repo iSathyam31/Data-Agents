@@ -1,0 +1,70 @@
+{
+    "table_name": "CUSTOMER_DEMOGRAPHICS",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CUSTOMER_DEMOGRAPHICS",
+    "table_description": "Dimension table containing demographic profile combinations for customers. Each row represents a unique combination of demographic attributes. This is a small table (~1.9 million rows) because it stores distinct profile combinations, not one row per customer. The fact tables (STORE_SALES, CATALOG_SALES, WEB_SALES) link directly to this via their CDEMO_SK columns.",
+    "use_cases": [
+        "Sales segmentation by gender, marital status, or education",
+        "Credit rating analysis of buyers",
+        "Purchase estimate correlation with actual spend",
+        "Dependent count impact on buying behavior",
+        "College enrollment impact on spending patterns"
+    ],
+    "data_quality_notes": [
+        "CD_GENDER values: 'M' or 'F' — not full words.",
+        "CD_MARITAL_STATUS values: 'M' (married), 'S' (single), 'W' (widowed), 'D' (divorced), 'U' (unknown).",
+        "CD_EDUCATION_STATUS values: 'Advanced Degree', 'College', '4 yr Degree', '2 yr Degree', 'Primary', 'Secondary', 'Unknown'.",
+        "CD_PURCHASE_ESTIMATE is an estimated annual purchase amount — a categorical bucket, not exact dollars.",
+        "CD_CREDIT_RATING values: 'Good', 'High Risk', 'Low Risk', 'Unknown'.",
+        "CD_DEP_COUNT is total number of dependents.",
+        "CD_DEP_EMPLOYED_COUNT is number of employed dependents.",
+        "CD_DEP_COLLEGE_COUNT is number of dependents in college."
+    ],
+    "table_columns": [
+        {
+            "name": "CD_DEMO_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by sales fact tables as CDEMO_SK."
+        },
+        {
+            "name": "CD_GENDER",
+            "type": "VARCHAR",
+            "description": "'M' or 'F'. Gender of customer."
+        },
+        {
+            "name": "CD_MARITAL_STATUS",
+            "type": "VARCHAR",
+            "description": "Marital status: 'M'=Married, 'S'=Single, 'W'=Widowed, 'D'=Divorced, 'U'=Unknown."
+        },
+        {
+            "name": "CD_EDUCATION_STATUS",
+            "type": "VARCHAR",
+            "description": "Education level: 'Advanced Degree', 'College', '4 yr Degree', '2 yr Degree', 'Primary', 'Secondary', 'Unknown'."
+        },
+        {
+            "name": "CD_PURCHASE_ESTIMATE",
+            "type": "NUMBER",
+            "description": "Estimated annual purchase amount in dollars (a bucket value, not exact)."
+        },
+        {
+            "name": "CD_CREDIT_RATING",
+            "type": "VARCHAR",
+            "description": "Credit rating: 'Good', 'High Risk', 'Low Risk', 'Unknown'."
+        },
+        {
+            "name": "CD_DEP_COUNT",
+            "type": "NUMBER",
+            "description": "Number of dependents."
+        },
+        {
+            "name": "CD_DEP_EMPLOYED_COUNT",
+            "type": "NUMBER",
+            "description": "Number of employed dependents."
+        },
+        {
+            "name": "CD_DEP_COLLEGE_COUNT",
+            "type": "NUMBER",
+            "description": "Number of dependents in college."
+        }
+    ]
+}

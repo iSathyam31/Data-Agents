@@ -1,0 +1,33 @@
+{
+    "table_name": "INCOME_BAND",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.INCOME_BAND",
+    "table_description": "Tiny lookup table (20 rows) defining annual household income ranges. Each row is an income band with a lower and upper bound in dollars. Referenced by HOUSEHOLD_DEMOGRAPHICS.HD_INCOME_BAND_SK. Use when you need actual dollar ranges rather than just the HD_BUY_POTENTIAL bucket.",
+    "use_cases": [
+        "Revenue segmentation by customer income level",
+        "High-income vs low-income customer purchase patterns",
+        "Income band profitability analysis"
+    ],
+    "data_quality_notes": [
+        "IB_LOWER_BOUND and IB_UPPER_BOUND are annual income in US dollars.",
+        "To get income band for customers: JOIN CUSTOMER -> HOUSEHOLD_DEMOGRAPHICS -> INCOME_BAND.",
+        "This table has only 20 rows — very safe to join."
+    ],
+    "table_columns": [
+        {
+            "name": "IB_INCOME_BAND_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by HOUSEHOLD_DEMOGRAPHICS.HD_INCOME_BAND_SK."
+        },
+        {
+            "name": "IB_LOWER_BOUND",
+            "type": "NUMBER",
+            "description": "Lower bound of annual household income in USD."
+        },
+        {
+            "name": "IB_UPPER_BOUND",
+            "type": "NUMBER",
+            "description": "Upper bound of annual household income in USD."
+        }
+    ]
+}

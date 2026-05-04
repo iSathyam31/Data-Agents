@@ -1,0 +1,33 @@
+{
+    "table_name": "REASON",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.REASON",
+    "table_description": "Very small lookup table (~35 rows) containing return reason codes and descriptions. Referenced by all three return fact tables: STORE_RETURNS.SR_REASON_SK, CATALOG_RETURNS.CR_REASON_SK, and WEB_RETURNS.WR_REASON_SK. Essential for return reason analysis.",
+    "use_cases": [
+        "Return reason breakdown across all channels",
+        "Most common return reasons by item category",
+        "Return reason impact on net loss",
+        "Channel-specific return reason patterns"
+    ],
+    "data_quality_notes": [
+        "R_REASON_DESC is a human-readable description like 'Did not fit', 'Not as described', 'Defective', etc.",
+        "This table is very small (35 rows) — safe to use in any join without performance concern."
+    ],
+    "table_columns": [
+        {
+            "name": "R_REASON_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by all three return fact tables."
+        },
+        {
+            "name": "R_REASON_ID",
+            "type": "VARCHAR",
+            "description": "Business key."
+        },
+        {
+            "name": "R_REASON_DESC",
+            "type": "VARCHAR",
+            "description": "Human-readable return reason description (e.g. 'Did not fit', 'Defective', 'Not as described')."
+        }
+    ]
+}

@@ -1,0 +1,197 @@
+{
+    "table_name": "WEB_SALES",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.WEB_SALES",
+    "table_description": "Fact table recording every line-item purchase made through the web channel (e-commerce). Structurally similar to CATALOG_SALES but references web-specific dimensions (WEB_PAGE, WEB_SITE) instead of CALL_CENTER and CATALOG_PAGE. At SF100TCL scale contains approximately 72 billion rows.",
+    "use_cases": [
+        "Web channel revenue and profit analysis",
+        "Web site and web page performance",
+        "Shipping mode preferences for online orders",
+        "Warehouse fulfillment for web orders",
+        "Online customer purchase behavior",
+        "Cross-channel revenue comparison (web vs store vs catalog)",
+        "Promotion effectiveness for online campaigns"
+    ],
+    "data_quality_notes": [
+        "WS_SOLD_DATE_SK can be NULL — filter with IS NOT NULL for date-bounded queries.",
+        "WS_BILL_CUSTOMER_SK and WS_SHIP_CUSTOMER_SK can differ for gift orders.",
+        "WS_ORDER_NUMBER groups line items — use COUNT(DISTINCT WS_ORDER_NUMBER) for order-level counts.",
+        "WS_NET_PROFIT can be negative.",
+        "WS_EXT_SHIP_COST is the shipping charge for this line item.",
+        "Join to WEB_SITE using WS_WEB_SITE_SK = WEB_SITE_SK.",
+        "Join to WEB_PAGE using WS_WEB_PAGE_SK = WP_WEB_PAGE_SK.",
+        "This table is partitioned on WS_SOLD_DATE_SK — always filter by date to control scan size."
+    ],
+    "table_columns": [
+        {
+            "name": "WS_SOLD_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM. Sale date. Can be NULL."
+        },
+        {
+            "name": "WS_SOLD_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM. Time of sale."
+        },
+        {
+            "name": "WS_SHIP_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM. Ship date. May differ from sale date."
+        },
+        {
+            "name": "WS_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM. Part of composite primary key."
+        },
+        {
+            "name": "WS_BILL_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Billing customer. Use for revenue attribution."
+        },
+        {
+            "name": "WS_BILL_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS."
+        },
+        {
+            "name": "WS_BILL_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "WS_BILL_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS. Billing address."
+        },
+        {
+            "name": "WS_SHIP_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Ship-to customer. Can differ from billing customer."
+        },
+        {
+            "name": "WS_SHIP_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS."
+        },
+        {
+            "name": "WS_SHIP_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "WS_SHIP_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS. Shipping address."
+        },
+        {
+            "name": "WS_WEB_PAGE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WEB_PAGE.WP_WEB_PAGE_SK. Page the item was purchased from."
+        },
+        {
+            "name": "WS_WEB_SITE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WEB_SITE.WEB_SITE_SK. Web property."
+        },
+        {
+            "name": "WS_SHIP_MODE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to SHIP_MODE. Delivery method."
+        },
+        {
+            "name": "WS_WAREHOUSE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WAREHOUSE. Fulfillment warehouse."
+        },
+        {
+            "name": "WS_PROMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to PROMOTION. Promotion applied. Can be NULL."
+        },
+        {
+            "name": "WS_ORDER_NUMBER",
+            "type": "NUMBER",
+            "description": "Web order number. Groups line items. Part of composite primary key with WS_ITEM_SK."
+        },
+        {
+            "name": "WS_QUANTITY",
+            "type": "NUMBER",
+            "description": "Units ordered."
+        },
+        {
+            "name": "WS_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Wholesale cost per unit."
+        },
+        {
+            "name": "WS_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "List price per unit."
+        },
+        {
+            "name": "WS_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Actual selling price per unit."
+        },
+        {
+            "name": "WS_EXT_DISCOUNT_AMT",
+            "type": "FLOAT",
+            "description": "Total discount on this line item."
+        },
+        {
+            "name": "WS_EXT_SALES_PRICE",
+            "type": "FLOAT",
+            "description": "Extended sales price = WS_QUANTITY * WS_SALES_PRICE. Primary revenue field."
+        },
+        {
+            "name": "WS_EXT_WHOLESALE_COST",
+            "type": "FLOAT",
+            "description": "Extended wholesale cost."
+        },
+        {
+            "name": "WS_EXT_LIST_PRICE",
+            "type": "FLOAT",
+            "description": "Extended list price."
+        },
+        {
+            "name": "WS_EXT_TAX",
+            "type": "FLOAT",
+            "description": "Tax amount."
+        },
+        {
+            "name": "WS_COUPON_AMT",
+            "type": "FLOAT",
+            "description": "Coupon discount."
+        },
+        {
+            "name": "WS_EXT_SHIP_COST",
+            "type": "FLOAT",
+            "description": "Shipping cost for this line item."
+        },
+        {
+            "name": "WS_NET_PAID",
+            "type": "FLOAT",
+            "description": "Amount paid after coupons, before tax."
+        },
+        {
+            "name": "WS_NET_PAID_INC_TAX",
+            "type": "FLOAT",
+            "description": "Net paid including tax."
+        },
+        {
+            "name": "WS_NET_PAID_INC_SHIP",
+            "type": "FLOAT",
+            "description": "Net paid including shipping."
+        },
+        {
+            "name": "WS_NET_PAID_INC_SHIP_TAX",
+            "type": "FLOAT",
+            "description": "Total payment including shipping and tax."
+        },
+        {
+            "name": "WS_NET_PROFIT",
+            "type": "FLOAT",
+            "description": "Net profit. Can be negative."
+        }
+    ]
+}

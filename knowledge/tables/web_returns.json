@@ -1,0 +1,142 @@
+{
+    "table_name": "WEB_RETURNS",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.WEB_RETURNS",
+    "table_description": "Fact table recording every item returned from web channel orders. At SF100TCL scale contains approximately 8 billion rows. Tracks refunded and returning customers separately, return reasons, and financial impact of each return.",
+    "use_cases": [
+        "Web channel return rate by item or category",
+        "Net web revenue after returns",
+        "Return reason analysis for online orders",
+        "Refund method breakdown for web returns",
+        "Customer return behavior comparison across channels"
+    ],
+    "data_quality_notes": [
+        "WR_RETURNED_DATE_SK can be NULL.",
+        "WR_REFUNDED_CUSTOMER_SK is who gets the refund; WR_RETURNING_CUSTOMER_SK is who sends the item back — can differ.",
+        "WR_ORDER_NUMBER links to WEB_SALES.WS_ORDER_NUMBER for matching returns to original web orders.",
+        "WR_NET_LOSS is the key financial impact metric.",
+        "Sum of WR_REFUNDED_CASH + WR_REVERSED_CHARGE + WR_STORE_CREDIT represents total refund value."
+    ],
+    "table_columns": [
+        {
+            "name": "WR_RETURNED_DATE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to DATE_DIM. Return date. Can be NULL."
+        },
+        {
+            "name": "WR_RETURNED_TIME_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to TIME_DIM."
+        },
+        {
+            "name": "WR_ITEM_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to ITEM. Part of composite primary key."
+        },
+        {
+            "name": "WR_REFUNDED_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Customer receiving refund."
+        },
+        {
+            "name": "WR_REFUNDED_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS."
+        },
+        {
+            "name": "WR_REFUNDED_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "WR_REFUNDED_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS."
+        },
+        {
+            "name": "WR_RETURNING_CUSTOMER_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER. Customer physically returning the item."
+        },
+        {
+            "name": "WR_RETURNING_CDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_DEMOGRAPHICS."
+        },
+        {
+            "name": "WR_RETURNING_HDEMO_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to HOUSEHOLD_DEMOGRAPHICS."
+        },
+        {
+            "name": "WR_RETURNING_ADDR_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to CUSTOMER_ADDRESS."
+        },
+        {
+            "name": "WR_WEB_PAGE_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to WEB_PAGE. Web page of original purchase."
+        },
+        {
+            "name": "WR_REASON_SK",
+            "type": "NUMBER",
+            "description": "Foreign key to REASON. Return reason code."
+        },
+        {
+            "name": "WR_ORDER_NUMBER",
+            "type": "NUMBER",
+            "description": "Original web order number. Links to WEB_SALES.WS_ORDER_NUMBER."
+        },
+        {
+            "name": "WR_RETURN_QUANTITY",
+            "type": "NUMBER",
+            "description": "Units returned."
+        },
+        {
+            "name": "WR_RETURN_AMT",
+            "type": "FLOAT",
+            "description": "Gross return amount."
+        },
+        {
+            "name": "WR_RETURN_TAX",
+            "type": "FLOAT",
+            "description": "Tax on return."
+        },
+        {
+            "name": "WR_RETURN_AMT_INC_TAX",
+            "type": "FLOAT",
+            "description": "Total return including tax."
+        },
+        {
+            "name": "WR_FEE",
+            "type": "FLOAT",
+            "description": "Return processing fee."
+        },
+        {
+            "name": "WR_RETURN_SHIP_COST",
+            "type": "FLOAT",
+            "description": "Return shipping cost."
+        },
+        {
+            "name": "WR_REFUNDED_CASH",
+            "type": "FLOAT",
+            "description": "Cash refunded."
+        },
+        {
+            "name": "WR_REVERSED_CHARGE",
+            "type": "FLOAT",
+            "description": "Credit card reversal."
+        },
+        {
+            "name": "WR_STORE_CREDIT",
+            "type": "FLOAT",
+            "description": "Store credit issued."
+        },
+        {
+            "name": "WR_NET_LOSS",
+            "type": "FLOAT",
+            "description": "Net financial loss from this web return."
+        }
+    ]
+}

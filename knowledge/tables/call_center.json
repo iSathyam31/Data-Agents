@@ -1,0 +1,176 @@
+{
+    "table_name": "CALL_CENTER",
+    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
+    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CALL_CENTER",
+    "table_description": "Dimension table for call centers that process catalog channel orders. SCD Type 2 — changes in staffing or management create new rows. Contains location, staffing, market info, and tax rate. Referenced by CATALOG_SALES.CS_CALL_CENTER_SK and CATALOG_RETURNS.CR_CALL_CENTER_SK.",
+    "use_cases": [
+        "Call center revenue and order volume performance",
+        "Call center staffing vs sales productivity",
+        "Regional call center comparison",
+        "Tax rate analysis for catalog orders by call center"
+    ],
+    "data_quality_notes": [
+        "SCD Type 2 — CC_REC_END_DATE IS NULL identifies current active record.",
+        "CC_CLOSED_DATE_SK is NULL for active call centers.",
+        "CC_TAX_PERCENTAGE is a decimal rate (e.g. 0.05 = 5%).",
+        "CC_SQ_FT is floor space in square feet.",
+        "CC_HOURS describes operating hours as text."
+    ],
+    "table_columns": [
+        {
+            "name": "CC_CALL_CENTER_SK",
+            "type": "NUMBER",
+            "description": "Surrogate primary key. Referenced by CATALOG_SALES.CS_CALL_CENTER_SK."
+        },
+        {
+            "name": "CC_CALL_CENTER_ID",
+            "type": "VARCHAR",
+            "description": "Business key."
+        },
+        {
+            "name": "CC_REC_START_DATE",
+            "type": "DATE",
+            "description": "SCD start date."
+        },
+        {
+            "name": "CC_REC_END_DATE",
+            "type": "DATE",
+            "description": "SCD end date. NULL = currently active."
+        },
+        {
+            "name": "CC_CLOSED_DATE_SK",
+            "type": "NUMBER",
+            "description": "FK to DATE_DIM. NULL if still operating."
+        },
+        {
+            "name": "CC_OPEN_DATE_SK",
+            "type": "NUMBER",
+            "description": "FK to DATE_DIM. When the call center opened."
+        },
+        {
+            "name": "CC_NAME",
+            "type": "VARCHAR",
+            "description": "Call center name."
+        },
+        {
+            "name": "CC_CLASS",
+            "type": "VARCHAR",
+            "description": "Classification of the call center."
+        },
+        {
+            "name": "CC_EMPLOYEES",
+            "type": "NUMBER",
+            "description": "Number of employees."
+        },
+        {
+            "name": "CC_SQ_FT",
+            "type": "NUMBER",
+            "description": "Floor space in square feet."
+        },
+        {
+            "name": "CC_HOURS",
+            "type": "VARCHAR",
+            "description": "Operating hours description."
+        },
+        {
+            "name": "CC_MANAGER",
+            "type": "VARCHAR",
+            "description": "Manager name."
+        },
+        {
+            "name": "CC_MKT_ID",
+            "type": "NUMBER",
+            "description": "Market area ID."
+        },
+        {
+            "name": "CC_MKT_CLASS",
+            "type": "VARCHAR",
+            "description": "Market class."
+        },
+        {
+            "name": "CC_MKT_DESC",
+            "type": "VARCHAR",
+            "description": "Market description."
+        },
+        {
+            "name": "CC_MARKET_MANAGER",
+            "type": "VARCHAR",
+            "description": "Market manager name."
+        },
+        {
+            "name": "CC_DIVISION",
+            "type": "NUMBER",
+            "description": "Division ID."
+        },
+        {
+            "name": "CC_DIVISION_NAME",
+            "type": "VARCHAR",
+            "description": "Division name."
+        },
+        {
+            "name": "CC_COMPANY",
+            "type": "NUMBER",
+            "description": "Company ID."
+        },
+        {
+            "name": "CC_COMPANY_NAME",
+            "type": "VARCHAR",
+            "description": "Company name."
+        },
+        {
+            "name": "CC_STREET_NUMBER",
+            "type": "VARCHAR",
+            "description": "Address street number."
+        },
+        {
+            "name": "CC_STREET_NAME",
+            "type": "VARCHAR",
+            "description": "Street name."
+        },
+        {
+            "name": "CC_STREET_TYPE",
+            "type": "VARCHAR",
+            "description": "Street type."
+        },
+        {
+            "name": "CC_SUITE_NUMBER",
+            "type": "VARCHAR",
+            "description": "Suite number."
+        },
+        {
+            "name": "CC_CITY",
+            "type": "VARCHAR",
+            "description": "City."
+        },
+        {
+            "name": "CC_COUNTY",
+            "type": "VARCHAR",
+            "description": "County."
+        },
+        {
+            "name": "CC_STATE",
+            "type": "VARCHAR",
+            "description": "State code."
+        },
+        {
+            "name": "CC_ZIP",
+            "type": "VARCHAR",
+            "description": "ZIP code."
+        },
+        {
+            "name": "CC_COUNTRY",
+            "type": "VARCHAR",
+            "description": "Country."
+        },
+        {
+            "name": "CC_GMT_OFFSET",
+            "type": "FLOAT",
+            "description": "GMT timezone offset."
+        },
+        {
+            "name": "CC_TAX_PERCENTAGE",
+            "type": "FLOAT",
+            "description": "Tax rate as decimal (e.g. 0.05 = 5%)."
+        }
+    ]
+}
