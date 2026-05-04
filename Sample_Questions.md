@@ -1,40 +1,46 @@
-# Sample Questions for Dash (Healthcare Domain)
+# Sample Questions for Dash (TPC-DS Retail Domain)
 
-Here are some example questions you can ask the Dash agent in the Streamlit UI to test its capabilities across different domains of the hospital.
+Here are some example questions you can ask the Dash agent in the Streamlit UI to test its capabilities across different dimensions of the TPC-DS retail dataset.
 
 ## 📊 Analyst Queries (Data Retrieval & Insights)
 
-### Patient & Admissions Tracking
-* *"How many patients are currently admitted in the hospital?"*
-* *"What is our overall bed occupancy rate right now?"*
-* *"What is the average length of stay for patients in the ICU?"*
-* *"Show me a breakdown of our patients by age group."*
+### Revenue & Sales
+* *"What is our total store revenue for 2001?"*
+* *"Compare total revenue across store, catalog, and web channels for 2001."*
+* *"Which store had the highest net profit in 2001?"*
+* *"Show me the top 10 best-selling items by total revenue in 2001."*
 
-### Clinical & Medical
-* *"What are the top 10 most prescribed medications this month?"*
-* *"Which lab test has the highest percentage of abnormal results?"*
-* *"Who are the doctors with the most scheduled appointments next week?"*
-* *"How many appointments were marked as 'No Show' last month?"*
+### Returns & Profitability
+* *"What is the overall return rate for store sales in 2001?"*
+* *"Which product category has the highest return rate?"*
+* *"Show me items where the return rate is more than 3x the category average."*
+* *"What is the net loss from returns broken down by sales channel?"*
 
-### Billing & Revenue
-* *"What is our total recognized revenue (paid bills) grouped by department?"*
-* *"Which insurance provider pays out the most to our hospital?"*
-* *"Show me the top 5 patients with the highest unpaid out-of-pocket balances."*
-* *"What percentage of our revenue comes from insurance versus patient out-of-pocket?"*
+### Customers & Demographics
+* *"Break down store sales revenue by customer income band for 2001."*
+* *"Which customer education level drives the most catalog sales?"*
+* *"Show me revenue from preferred customers vs. non-preferred customers."*
+* *"Who are our top 20 highest-value customers by total spend?"*
+
+### Promotions & Inventory
+* *"Which promotions generated the highest incremental revenue in 2001?"*
+* *"Show me items with critically low inventory across all warehouses."*
+* *"What is the average inventory level by category for Q4 2001?"*
 
 ---
 
 ## 🛠️ Engineer Queries (Building Infrastructure)
 
-* *"Create a view in the dash schema called `daily_admissions_summary` that shows the number of admissions per day for the last 30 days."*
-* *"Build a summary table in the dash schema that lists every doctor and their total number of completed appointments."*
-* *"Create a view named `dash.unpaid_invoices` that joins the billing table with patient names and phones so our collections team can call them."*
-* *"Can you build a view that calculates the current bed availability for every ward?"*
+* *"Create a view called `dash.monthly_store_revenue` that shows total revenue, net paid, and net profit per store per month."*
+* *"Build a view `dash.channel_revenue_comparison` that compares total revenue and profit margin across store, catalog, and web channels by year."*
+* *"Create a view `dash.top_items_by_category` ranking items by total store sales revenue within each product category."*
+* *"Build a `dash.store_performance_ranking` view that ranks stores by revenue, return rate, and profit margin."*
+* *"Create a `dash.low_inventory_items` view that flags any item/warehouse combination where current quantity is below 10."*
 
 ---
 
 ## 🧠 Self-Learning Tests
 
-1. **Ask a hard question:** *"What's the average length of stay?"* (Dash will find the pre-loaded validated query in ChromaDB and answer instantly).
-2. **Force an error:** Ask a highly complex, slightly vague question. If the Analyst writes bad SQL and hits a Snowflake syntax error, watch the logs! It will fix the error, and then save the fix to the `dash_learnings` collection.
-3. **Ask again:** Ask the exact same hard question again. It will use its previous learning to answer perfectly on the first try.
+1. **Hit the knowledge base:** *"What is our total store revenue for 2001?"* — Dash will find the pre-loaded `monthly_store_sales_revenue.sql` pattern in ChromaDB and answer without starting from scratch.
+2. **Force an error:** Ask a complex cross-channel question (e.g. *"What is the combined return rate across all three channels for 2001?"*). If Dash writes a query that errors, watch it fix the SQL and save the fix to `dash_learnings`.
+3. **Ask again:** Repeat the same question. Dash will use its saved learning and answer correctly on the first try.
