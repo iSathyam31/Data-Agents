@@ -1,10 +1,12 @@
-# Dash — Self-Learning Data Agent
+# Dash - Self-Learning Data Agent
 
 Dash is an AI-powered conversational agent that lets anyone ask plain English questions about a massive retail dataset and get real answers backed by live SQL. Instead of requiring analysts to write queries, you just ask: *"What is our total store revenue for 2001?"* or *"Which channel has the highest profit margin?"* and Dash figures out the SQL, runs it, and returns an insight.
 
 This version of Dash is built using the **AWS Strands Agents SDK** and is stress-tested against the **TPC-DS SF100TCL** benchmark dataset on Snowflake — a 100TB, ~300 billion row retail decision-support dataset covering store, catalog, and web sales channels.
 
 The defining feature of Dash is that it **learns from every interaction**. Successful queries, discovered fixes, and user corrections are all stored in a local vector database and retrieved automatically on future questions.
+
+![Dash UI](assets/Dash.png)
 
 ---
 
@@ -177,84 +179,60 @@ Opens at `http://localhost:8501`.
 
 ```text
 .
-├── app.py                          # Streamlit chat UI
-├── requirements.txt                # Python dependencies
-├── .env                            # Your local secrets (not committed)
-├── .env.example                    # Template for .env
-├── .gitignore
+├── app.py                        # Streamlit chat UI
+├── requirements.txt
+├── .env / .env.example
 │
-├── knowledge/                      # Pre-loaded knowledge base (loaded into ChromaDB)
-│   ├── tables/                     # 24 TPC-DS table metadata JSONs
-│   │   ├── store_sales.json
-│   │   ├── catalog_sales.json
-│   │   ├── web_sales.json
-│   │   ├── store_returns.json
-│   │   ├── catalog_returns.json
-│   │   ├── web_returns.json
-│   │   ├── inventory.json
-│   │   ├── customer.json
-│   │   ├── customer_address.json
-│   │   ├── customer_demographics.json
-│   │   ├── date_dim.json
-│   │   ├── time_dim.json
-│   │   ├── item.json
-│   │   ├── store.json
-│   │   ├── promotion.json
-│   │   ├── call_center.json
-│   │   ├── catalog_page.json
-│   │   ├── web_site.json
-│   │   ├── web_page.json
-│   │   ├── warehouse.json
-│   │   ├── ship_mode.json
-│   │   ├── reason.json
-│   │   ├── household_demographics.json
-│   │   └── income_band.json
-│   ├── queries/                    # 12 validated SQL query patterns
-│   │   ├── monthly_store_sales_revenue.sql
-│   │   ├── channel_revenue_comparison.sql
-│   │   ├── top_selling_items_by_category.sql
-│   │   ├── store_performance_ranking.sql
-│   │   ├── return_rate_by_category.sql
-│   │   ├── year_over_year_store_sales.sql
-│   │   ├── promotion_effectiveness.sql
-│   │   ├── inventory_levels_by_warehouse.sql
-│   │   ├── customer_demographics_sales_breakdown.sql
-│   │   ├── high_value_customers.sql
-│   │   ├── return_reasons_analysis.sql
-│   │   └── sales_by_state_region.sql
+├── knowledge/                    # Pre-loaded into ChromaDB on first run
+│   ├── tables/                   # 24 TPC-DS table metadata JSONs
+│   ├── queries/                  # 12 validated SQL query patterns
 │   └── business/
-│       └── tpcds_retail_rules.json # KPIs, channel definitions, gotchas
+│       └── tpcds_retail_rules.json
 │
 ├── scripts/
-│   ├── init_db.py                  # (unused — TPC-DS data is pre-loaded by Snowflake)
-│   └── load_knowledge.py           # Loads knowledge/ into ChromaDB
+│   └── load_knowledge.py         # python scripts/load_knowledge.py --recreate
 │
 ├── snowflake_setup/
-│   └── 01_setup.sql                # Roles, user, GRANT IMPORTED PRIVILEGES on SNOWFLAKE_SAMPLE_DATA
+│   └── 01_setup.sql              # Run once as ACCOUNTADMIN
 │
-├── venv/                           # Local Python virtual environment (not committed)
-│
-└── src/
-    └── dash_strands/
-        ├── __init__.py
-        ├── config.py               # Loads all env vars (Azure OpenAI, Snowflake, ChromaDB)
-        ├── agents/
-        │   ├── __init__.py
-        │   ├── leader.py           # Routes requests, synthesizes responses
-        │   ├── analyst.py          # Read-only SQL agent
-        │   └── engineer.py         # dash schema builder
-        ├── db/
-        │   └── __init__.py         # Snowflake SQLAlchemy engine factory
-        ├── knowledge/
-        │   ├── __init__.py
-        │   └── store.py            # ChromaDB client + Azure embedding function
-        └── tools/
-            ├── __init__.py
-            ├── introspect_schema.py    # list_schemas, list_tables, describe_table
-            ├── knowledge_search.py     # Semantic search over ChromaDB
-            ├── sql_readonly.py         # execute_sql_readonly (Analyst)
-            ├── sql_dash_write.py       # execute_sql_dash (Engineer, dash.* only)
-            ├── save_learning.py        # Saves error fixes to dash_learnings
-            ├── save_validated_query.py # Saves good queries to dash_knowledge
-            └── update_knowledge.py     # Registers new dash views in knowledge base
+└── src/dash_strands/
+    ├── config.py                 # Env var loader
+    ├── agents/                   # leader.py · analyst.py · engineer.py
+    ├── db/                       # Snowflake engine factory
+    ├── knowledge/store.py        # ChromaDB + Azure embeddings
+    └── tools/                    # SQL, introspect, search, save tools
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Role |
+|-------|-----------|------|
+| **Agent Framework** | [AWS Strands Agents SDK](https://github.com/strands-agents/sdk-python) | Multi-agent orchestration |
+| **LLM** | Azure OpenAI — `gpt-4o` | Reasoning, SQL generation, synthesis |
+| **Embeddings** | Azure OpenAI — `text-embedding-3-small` | Semantic knowledge search |
+| **Data Warehouse** | Snowflake (`SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL`) | 100TB TPC-DS retail dataset |
+| **Vector Store** | ChromaDB (local persistent) | Knowledge base + learnings memory |
+| **UI** | Streamlit | Chat interface |
+| **Language** | Python 3.11+ | — |
+
+---
+
+## ⚠️ Limitations & Known Issues
+
+- **Query cost** — Fact tables like `STORE_SALES` have ~300B rows. Queries without a `DATE_DIM` year filter will scan the full table and may be slow or expensive. Dash's prompts enforce date filters, but complex or vague questions may bypass them.
+- **TPC-DS date range** — All data covers years 1998–2002. Asking about "current" or "recent" data will return no results.
+- **ChromaDB is local** — The vector store lives in `./chroma_data` on disk. It is not shared across machines. Each environment needs its own `load_knowledge.py` run.
+- **Snowflake sample data is read-only** — `SNOWFLAKE_SAMPLE_DATA` is a shared Snowflake database. The `dash` schema for agent-built views must live in a separate writable database/schema that you provision.
+- **No streaming** — Responses appear all at once after the agent finishes. Long multi-step queries may feel slow.
+- **SQL extraction is heuristic** — The "View SQL" expander uses regex to find SQL in responses. Complex multi-block responses may not extract cleanly.
+
+---
+
+## 🙏 Credits
+
+- **Inspiration** — [Dash v2](https://github.com/agno-agi/agno/tree/main/cookbook/examples/apps/dash) by [Ashpreet Bedi](https://github.com/ashpreetbedi) / [Agno](https://github.com/agno-agi/agno). This project replicates the Dash v2 concept using AWS Strands Agents instead of the Agno framework.
+- **Dataset** — [TPC-DS](https://www.tpc.org/tpcds/) benchmark dataset, provided as `SNOWFLAKE_SAMPLE_DATA` in Snowflake.
+- **Agent SDK** — [AWS Strands Agents](https://github.com/strands-agents/sdk-python)
+- **LLM & Embeddings** — [Azure OpenAI Service](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
