@@ -1,4 +1,4 @@
-# Dash — Self-Learning Data Agent
+# Dash: Self-Learning Data Agent
 
 Dash is an AI-powered conversational agent that lets anyone ask plain-English questions about a massive retail dataset and get real answers backed by live SQL. Instead of requiring analysts to write queries, you just ask: *"What is total store revenue for 2001?"* or *"Which channel has the highest profit margin?"* and Dash figures out the SQL, runs it, and returns an insight.
 
@@ -111,6 +111,36 @@ Rather than discovering the schema on every question, Dash pre-loads table metad
 - **Business context** — metrics definitions, sales channel mappings, product hierarchy, dimension table sizes, common gotchas, and recommended query patterns are read from `knowledge/business/tpcds_retail_rules.json` and appended to the Analyst prompt.
 
 This means the agent knows which table to query, which column to use for revenue, and that `STORE_SALES` has ~300B rows before the user even finishes typing.
+
+---
+
+## 📊 Automatic Chart & Table Rendering
+
+Every response that contains data is automatically formatted by the agent and rendered natively in the UI — no user action required.
+
+### Tables
+When a result has multiple rows, the agent always formats it as a **GitHub-flavoured markdown table** (never bullet points). Numeric columns are right-aligned and large numbers are formatted with SI suffixes (`$14.2T`, `3.5M`). Streamlit renders these natively.
+
+### Charts
+When the data is also visually meaningful, the agent appends a structured `chart` block which `app.py` extracts, strips from the displayed text, and renders as an interactive Plotly figure. The chart block is **never visible to the user** — only the rendered figure is shown.
+
+**Supported chart types:**
+
+| Type | When used |
+|------|----------|
+| `bar` | Comparing ≤ 8 categories by a single metric |
+| `horizontal_bar` | Same, but with long labels or > 8 items |
+| `line` | Ordered time series (monthly, yearly trends) |
+| `pie` | Part-of-whole with ≤ 6 slices |
+| `donut` | Same as pie, preferred when a grand total matters |
+| `scatter` | Two numeric dimensions per item (e.g. revenue vs return rate) |
+
+**Multi-series charts:** When the result spans both a time/category dimension and a grouping dimension (e.g. monthly revenue broken out by Store / Catalog / Web), the agent uses a `series` format that produces one line or bar group per category — not a flattened single series.
+
+**Implementation:**
+- `extract_chart(text)` — regex extracts the `chart` JSON block and returns `(spec, cleaned_text)`. The block is removed from displayed markdown.
+- `render_chart(spec)` — builds a `plotly.graph_objects` figure and renders it via `st.components.v1.html()` using Plotly loaded from CDN. This bypasses Streamlit's bundled `PlotlyChart.js` to avoid dynamic-import failures in proxied/tunnelled environments.
+- Charts are stored in `st.session_state.chart_map` (keyed by message index) and re-rendered on page reload.
 
 ---
 
@@ -300,6 +330,7 @@ python -m evals smoke --verbose
 | **Agent Workspace** | Snowflake (`DASH_AGENT.dash`) | Views and summary tables built by the Engineer |
 | **Vector Store** | ChromaDB (local persistent) | Knowledge base and learnings memory |
 | **UI** | Streamlit | Chat interface |
+| **Charting** | Plotly (`plotly.graph_objects`) + CDN rendering | Interactive charts rendered via `st.components.v1.html` |
 | **Language** | Python 3.11+ | — |
 
 ---
