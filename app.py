@@ -104,9 +104,6 @@ st.markdown("""
 # ── Helper ────────────────────────────────────────────────────────────────────
 def extract_sql(text: str) -> str | None:
     m = re.search(r"```sql\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
-    if m:
-        return m.group(1).strip()
-    m = re.search(r"((?:SELECT|WITH|CREATE)\b.+?)(?:\n\n|\Z)", text, re.DOTALL | re.IGNORECASE)
     return m.group(1).strip() if m else None
 
 

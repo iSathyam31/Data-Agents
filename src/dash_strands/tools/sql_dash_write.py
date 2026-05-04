@@ -3,6 +3,7 @@
 from strands import tool
 from sqlalchemy import text
 
+from dash_strands import config
 from dash_strands.db import get_write_engine
 
 
@@ -23,6 +24,7 @@ def execute_sql_dash(sql: str) -> str:
     engine = get_write_engine()
     try:
         with engine.connect() as conn:
+            conn.execute(text(f"USE WAREHOUSE {config.SF_WAREHOUSE}"))
             result = conn.execute(text(sql))
             conn.commit()
 

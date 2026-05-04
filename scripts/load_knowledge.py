@@ -130,4 +130,23 @@ def load_knowledge():
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Load knowledge files into ChromaDB.")
+    parser.add_argument(
+        "--recreate",
+        action="store_true",
+        help="Delete and recreate the dash_knowledge collection before loading.",
+    )
+    args = parser.parse_args()
+
+    if args.recreate:
+        from dash_strands.knowledge.store import _get_chroma_client
+        client = _get_chroma_client()
+        try:
+            client.delete_collection("dash_knowledge")
+            print("Deleted existing dash_knowledge collection.")
+        except Exception:
+            pass  # collection didn't exist yet
+
     load_knowledge()

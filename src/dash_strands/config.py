@@ -13,11 +13,13 @@ load_dotenv(_project_root / ".env")
 SF_ACCOUNT = os.getenv("SF_ACCOUNT", "")
 SF_USER = os.getenv("SF_USER", "")
 SF_PASSWORD = os.getenv("SF_PASSWORD", "")
-SF_DATABASE = os.getenv("SF_DATABASE", "SNOWFLAKE_SAMPLE_DATA")
+SF_DATABASE = os.getenv("SF_DATABASE", "SNOWFLAKE_SAMPLE_DATA")   # read-only source
 SF_SCHEMA = os.getenv("SF_SCHEMA", "TPCDS_SF100TCL")
 SF_WAREHOUSE = os.getenv("SF_WAREHOUSE", "COMPUTE_WH")
 SF_ROLE_ANALYST = os.getenv("SF_ROLE_ANALYST", "dash_analyst_role")
 SF_ROLE_ENGINEER = os.getenv("SF_ROLE_ENGINEER", "dash_engineer_role")
+# Writable database owned by the Engineer (must exist before running the app)
+SF_DASH_DATABASE = os.getenv("SF_DASH_DATABASE", "DASH_AGENT")
 
 # --- Azure OpenAI (Chat) ---
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "")

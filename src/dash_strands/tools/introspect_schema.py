@@ -6,6 +6,8 @@ from sqlalchemy import text
 from dash_strands import config
 from dash_strands.db import get_readonly_engine
 
+_DB = config.SF_DATABASE  # SNOWFLAKE_SAMPLE_DATA
+
 
 @tool
 def list_schemas() -> str:
@@ -18,8 +20,8 @@ def list_schemas() -> str:
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
-                "SELECT schema_name FROM information_schema.schemata "
-                "WHERE schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast') "
+                f"SELECT schema_name FROM {_DB}.information_schema.schemata "
+                "WHERE schema_name NOT IN ('INFORMATION_SCHEMA') "
                 "ORDER BY schema_name"
             ))
             schemas = [row[0] for row in result]
@@ -42,8 +44,8 @@ def list_tables(schema_name: str = "TPCDS_SF100TCL") -> str:
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
-                "SELECT table_name, table_type "
-                "FROM information_schema.tables "
+                f"SELECT table_name, table_type "
+                f"FROM {_DB}.information_schema.tables "
                 "WHERE table_schema ILIKE :schema "
                 "ORDER BY table_type, table_name"
             ), {"schema": schema_name})
@@ -71,8 +73,8 @@ def describe_table(table_name: str, schema_name: str = "TPCDS_SF100TCL") -> str:
     try:
         with engine.connect() as conn:
             result = conn.execute(text(
-                "SELECT column_name, data_type, is_nullable, column_default "
-                "FROM information_schema.columns "
+                f"SELECT column_name, data_type, is_nullable, column_default "
+                f"FROM {_DB}.information_schema.columns "
                 "WHERE table_schema ILIKE :schema AND table_name ILIKE :table "
                 "ORDER BY ordinal_position"
             ), {"schema": schema_name, "table": table_name})
