@@ -1,11 +1,13 @@
 """Dash — Self-learning Data Agent (Streamlit UI)."""
 
+import json
 import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+import plotly.graph_objects as go
 import streamlit as st
 
 st.set_page_config(
@@ -101,10 +103,160 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Helper ────────────────────────────────────────────────────────────────────
+# ── Helpers ──────────────────────────────────────────────────────────────────
 def extract_sql(text: str) -> str | None:
     m = re.search(r"```sql\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
     return m.group(1).strip() if m else None
+
+
+def extract_chart(text: str) -> tuple[dict | None, str]:
+    """Extract a ```chart JSON block from the response text.
+
+    Returns (spec_dict_or_None, cleaned_text_without_chart_block).
+    """
+    m = re.search(r"```chart\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return None, text
+    try:
+        spec = json.loads(m.group(1).strip())
+    except json.JSONDecodeError:
+        return None, text
+    cleaned = text[: m.start()].rstrip() + text[m.end() :]
+    return spec, cleaned.strip()
+
+
+def render_chart(spec: dict, key: str | None = None) -> None:
+    """Render a Plotly chart from the agent's chart spec dict.
+
+    Uses plotly.graph_objects directly (not plotly.express) to avoid
+    the Narwhals/DataFrame dependency introduced in Plotly 6.x.
+
+    Also handles Chart.js-style JSON (data.labels / data.datasets) as a
+    fallback in case the agent emits that format instead of our flat format.
+    """
+    chart_type = spec.get("type", "bar").lower()
+    title = spec.get("title", "")
+    x_label = spec.get("x_label", "")
+    y_label = spec.get("y_label", "")
+    raw_data = spec.get("data", [])
+    series = spec.get("series", [])  # multi-series format
+
+    # ── Normalise Chart.js format → our flat format ──────────────────────────
+    # Chart.js: {"data": {"labels": [...], "datasets": [{"label":..., "data": [...]}]}}
+    # Our multi-series: {"series": [{"name": "Store", "data": [{"label":"Jan","value":1}]}]}
+    if isinstance(raw_data, dict):
+        cjs_labels = raw_data.get("labels", [])
+        datasets = raw_data.get("datasets", [])
+        if len(datasets) > 1:
+            # Convert multi-dataset Chart.js → our series format
+            series = [
+                {
+                    "name": ds.get("label", f"Series {i+1}"),
+                    "data": [
+                        {"label": str(lbl), "value": val}
+                        for lbl, val in zip(cjs_labels, ds.get("data", []))
+                    ],
+                }
+                for i, ds in enumerate(datasets)
+            ]
+            raw_data = []
+        else:
+            values = datasets[0].get("data", []) if datasets else []
+            raw_data = [
+                {"label": str(lbl), "value": val}
+                for lbl, val in zip(cjs_labels, values)
+            ]
+        if not title:
+            title = (
+                spec.get("options", {})
+                .get("plugins", {})
+                .get("title", {})
+                .get("text", "")
+            )
+
+    data = raw_data
+
+    if not data and not series:
+        st.warning("Chart spec contained no data points.")
+        return
+
+    try:
+        # ── Multi-series rendering (line and bar) ─────────────────────────────
+        if series:
+            fig = go.Figure()
+            for s in series:
+                s_labels = [str(d.get("label", "")) for d in s.get("data", [])]
+                s_values = [d.get("value", 0) for d in s.get("data", [])]
+                if chart_type == "line":
+                    fig.add_trace(go.Scatter(
+                        x=s_labels, y=s_values,
+                        mode="lines+markers", name=s.get("name", ""),
+                    ))
+                else:  # grouped bar
+                    fig.add_trace(go.Bar(
+                        x=s_labels, y=s_values, name=s.get("name", ""),
+                    ))
+            if chart_type == "bar":
+                fig.update_layout(barmode="group")
+            fig.update_xaxes(title_text=x_label)
+            fig.update_yaxes(title_text=y_label)
+
+        # ── Single-series rendering ────────────────────────────────────────────
+        else:
+            labels = [str(d.get("label", "")) for d in data]
+
+            if chart_type == "scatter":
+                xs = [d.get("x", 0) for d in data]
+                ys = [d.get("y", 0) for d in data]
+                trace = go.Scatter(
+                    x=xs, y=ys, mode="markers+text",
+                    text=labels, textposition="top center",
+                )
+                fig = go.Figure(data=[trace])
+                fig.update_xaxes(title_text=x_label)
+                fig.update_yaxes(title_text=y_label)
+
+            elif chart_type == "line":
+                values = [d.get("value", 0) for d in data]
+                trace = go.Scatter(x=labels, y=values, mode="lines+markers")
+                fig = go.Figure(data=[trace])
+                fig.update_xaxes(title_text=x_label)
+                fig.update_yaxes(title_text=y_label)
+
+            elif chart_type in ("pie", "donut"):
+                values = [d.get("value", 0) for d in data]
+                hole = 0.4 if chart_type == "donut" else 0.0
+                trace = go.Pie(labels=labels, values=values, hole=hole)
+                fig = go.Figure(data=[trace])
+
+            elif chart_type == "horizontal_bar":
+                values = [d.get("value", 0) for d in data]
+                trace = go.Bar(x=values, y=labels, orientation="h")
+                fig = go.Figure(data=[trace])
+                fig.update_layout(yaxis={"categoryorder": "total ascending"})
+                fig.update_xaxes(title_text=y_label)
+                fig.update_yaxes(title_text=x_label)
+
+            else:  # default: bar
+                values = [d.get("value", 0) for d in data]
+                trace = go.Bar(x=labels, y=values)
+                fig = go.Figure(data=[trace])
+                fig.update_xaxes(title_text=x_label)
+                fig.update_yaxes(title_text=y_label)
+
+        fig.update_layout(
+            title_text=title,
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            margin={"t": 50, "b": 40, "l": 40, "r": 20},
+            height=420,
+        )
+
+        st.plotly_chart(fig, width="stretch", key=key)
+
+    except Exception as exc:
+        st.warning(f"⚠️ Could not render chart: {exc}")
 
 
 # ── Session state ─────────────────────────────────────────────────────────────
@@ -113,6 +265,9 @@ if "messages" not in st.session_state:
 if "sql_map" not in st.session_state:
     # maps message index (assistant) -> SQL string
     st.session_state.sql_map = {}
+if "chart_map" not in st.session_state:
+    # maps message index (assistant) -> chart spec dict
+    st.session_state.chart_map = {}
 
 if "leader" not in st.session_state:
     with st.spinner("Connecting to Snowflake and loading knowledge base..."):
@@ -155,6 +310,7 @@ with st.sidebar:
     if st.button("🗑️ Clear Chat", use_container_width=True):
         st.session_state.messages = []
         st.session_state.sql_map = {}
+        st.session_state.chart_map = {}
         st.session_state.pop("leader", None)
         st.rerun()
 
@@ -184,10 +340,14 @@ else:
     for i, msg in enumerate(st.session_state.messages):
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-            # Show SQL expander under assistant messages that had a query
-            if msg["role"] == "assistant" and i in st.session_state.sql_map:
-                with st.expander("🔍 View SQL", expanded=False):
-                    st.code(st.session_state.sql_map[i], language="sql")
+            if msg["role"] == "assistant":
+                # Render chart if present
+                if i in st.session_state.chart_map:
+                    render_chart(st.session_state.chart_map[i], key=f"chart_{i}")
+                # Show SQL expander
+                if i in st.session_state.sql_map:
+                    with st.expander("🔍 View SQL", expanded=False):
+                        st.code(st.session_state.sql_map[i], language="sql")
 
 if prompt := st.chat_input("Ask about sales, returns, promotions, inventory, or customers..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -202,11 +362,20 @@ if prompt := st.chat_input("Ask about sales, returns, promotions, inventory, or 
                 response_text = str(response)
             except Exception as e:
                 response_text = f"⚠️ Error: {e}"
+
+        # Extract chart spec and strip its block from the displayed text
+        chart_spec, response_text = extract_chart(response_text)
+
         st.markdown(response_text)
+
+        assistant_idx = len(st.session_state.messages)  # index it will get
+
+        if chart_spec:
+            render_chart(chart_spec, key=f"chart_{assistant_idx}")
+            st.session_state.chart_map[assistant_idx] = chart_spec
 
         sql = extract_sql(response_text)
         if sql:
-            assistant_idx = len(st.session_state.messages)  # index it will get
             st.session_state.sql_map[assistant_idx] = sql
             with st.expander("🔍 View SQL", expanded=False):
                 st.code(sql, language="sql")
