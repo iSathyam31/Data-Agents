@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import plotly.graph_objects as go
 import streamlit as st
+from dash_strands.palettes import get_colors
 
 st.set_page_config(
     page_title="Dash | Retail Data Agent",
@@ -117,8 +118,11 @@ def extract_chart(text: str) -> tuple[dict | None, str]:
     m = re.search(r"```chart\s*(.*?)```", text, re.DOTALL | re.IGNORECASE)
     if not m:
         return None, text
+    raw_json = m.group(1).strip()
+    # Fix common hallucination: JS expressions like "AAAA".replace(" ","")
+    raw_json = re.sub(r'"([^"]*)"\.replace\([^)]*\)', lambda x: json.dumps(x.group(1).replace(" ", "")), raw_json)
     try:
-        spec = json.loads(m.group(1).strip())
+        spec = json.loads(raw_json)
     except json.JSONDecodeError:
         return None, text
     cleaned = text[: m.start()].rstrip() + text[m.end() :]
@@ -140,6 +144,7 @@ def render_chart(spec: dict, key: str | None = None) -> None:
     y_label = spec.get("y_label", "")
     raw_data = spec.get("data", [])
     series = spec.get("series", [])  # multi-series format
+    palette_name = spec.get("palette")  # optional palette override
 
     # ── Normalise Chart.js format → our flat format ──────────────────────────
     # Chart.js: {"data": {"labels": [...], "datasets": [{"label":..., "data": [...]}]}}
@@ -177,24 +182,33 @@ def render_chart(spec: dict, key: str | None = None) -> None:
     data = raw_data
 
     if not data and not series:
-        st.warning("Chart spec contained no data points.")
+        return  # nothing to chart
+
+    # Guard: never render a chart with fewer than 2 data points
+    if data and len(data) < 2:
+        return
+    if series and all(len(s.get("data", [])) < 2 for s in series):
         return
 
     try:
         # ── Multi-series rendering (line and bar) ─────────────────────────────
         if series:
             fig = go.Figure()
-            for s in series:
+            series_colors = get_colors(chart_type, len(series), palette_name, mode="multi")
+            for idx, s in enumerate(series):
                 s_labels = [str(d.get("label", "")) for d in s.get("data", [])]
                 s_values = [d.get("value", 0) for d in s.get("data", [])]
                 if chart_type == "line":
                     fig.add_trace(go.Scatter(
                         x=s_labels, y=s_values,
                         mode="lines+markers", name=s.get("name", ""),
+                        line={"color": series_colors[idx]},
+                        marker={"color": series_colors[idx]},
                     ))
                 else:  # grouped bar
                     fig.add_trace(go.Bar(
                         x=s_labels, y=s_values, name=s.get("name", ""),
+                        marker={"color": series_colors[idx]},
                     ))
             if chart_type == "bar":
                 fig.update_layout(barmode="group")
@@ -204,6 +218,7 @@ def render_chart(spec: dict, key: str | None = None) -> None:
         # ── Single-series rendering ────────────────────────────────────────────
         else:
             labels = [str(d.get("label", "")) for d in data]
+            bar_colors = get_colors(chart_type, len(labels), palette_name, mode="single")
 
             if chart_type == "scatter":
                 xs = [d.get("x", 0) for d in data]
@@ -211,6 +226,7 @@ def render_chart(spec: dict, key: str | None = None) -> None:
                 trace = go.Scatter(
                     x=xs, y=ys, mode="markers+text",
                     text=labels, textposition="top center",
+                    marker={"color": bar_colors, "size": 10},
                 )
                 fig = go.Figure(data=[trace])
                 fig.update_xaxes(title_text=x_label)
@@ -218,7 +234,11 @@ def render_chart(spec: dict, key: str | None = None) -> None:
 
             elif chart_type == "line":
                 values = [d.get("value", 0) for d in data]
-                trace = go.Scatter(x=labels, y=values, mode="lines+markers")
+                trace = go.Scatter(
+                    x=labels, y=values, mode="lines+markers",
+                    line={"color": bar_colors[0], "width": 3},
+                    marker={"color": bar_colors, "size": 8},
+                )
                 fig = go.Figure(data=[trace])
                 fig.update_xaxes(title_text=x_label)
                 fig.update_yaxes(title_text=y_label)
@@ -226,12 +246,18 @@ def render_chart(spec: dict, key: str | None = None) -> None:
             elif chart_type in ("pie", "donut"):
                 values = [d.get("value", 0) for d in data]
                 hole = 0.4 if chart_type == "donut" else 0.0
-                trace = go.Pie(labels=labels, values=values, hole=hole)
+                trace = go.Pie(
+                    labels=labels, values=values, hole=hole,
+                    marker={"colors": bar_colors},
+                )
                 fig = go.Figure(data=[trace])
 
             elif chart_type == "horizontal_bar":
                 values = [d.get("value", 0) for d in data]
-                trace = go.Bar(x=values, y=labels, orientation="h")
+                trace = go.Bar(
+                    x=values, y=labels, orientation="h",
+                    marker={"color": bar_colors},
+                )
                 fig = go.Figure(data=[trace])
                 fig.update_layout(yaxis={"categoryorder": "total ascending"})
                 fig.update_xaxes(title_text=y_label)
@@ -239,7 +265,10 @@ def render_chart(spec: dict, key: str | None = None) -> None:
 
             else:  # default: bar
                 values = [d.get("value", 0) for d in data]
-                trace = go.Bar(x=labels, y=values)
+                trace = go.Bar(
+                    x=labels, y=values,
+                    marker={"color": bar_colors},
+                )
                 fig = go.Figure(data=[trace])
                 fig.update_xaxes(title_text=x_label)
                 fig.update_yaxes(title_text=y_label)
