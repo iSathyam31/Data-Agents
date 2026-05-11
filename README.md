@@ -15,35 +15,41 @@ The defining feature of Dash is that it **learns from every interaction**. Succe
 Dash uses a **multi-agent architecture** with a persistent Leader that delegates to two persistent specialists. All three agents are created once per session and retain conversation history across turns.
 
 ```text
-┌──────────────────────────────────────────┐
-│             Streamlit (UI)               │
-│         User types a question            │
-└────────────────────┬─────────────────────┘
-                     │
-                     ▼
-         ┌───────────────────────┐
-         │        LEADER         │
-         │                       │
-         │  Routes to the right  │
-         │  specialist. Synth-   │
-         │  esizes the answer.   │
-         │  No SQL access.       │
-         └──────────┬────────────┘
-                    │
-         ┌──────────┴──────────┐
-         ▼                     ▼
- ┌───────────────┐   ┌──────────────────┐
- │   ANALYST     │   │    ENGINEER      │
- │               │   │                  │
- │ Answers data  │   │ Builds views and │
- │ questions     │   │ summary tables   │
- │ with SQL.     │   │ in dash schema.  │
- │ (READ ONLY)   │   │ (WRITE: dash.*)  │
- └──────┬────────┘   └────────┬─────────┘
-        │                     │
-        ▼                     ▼
-    Snowflake             Snowflake
-(TPCDS_SF100TCL.*)    (DASH_AGENT.dash.*)
+┌────────────────────────────────────────────────────────────────┐
+│              React Frontend (Vite + Tailwind)                  │
+│     Chat UI · Charts (Recharts) · Markdown Rendering          │
+└────────────────────────────┬───────────────────────────────────┘
+                             │  HTTP (POST /api/chat)
+                             ▼
+┌────────────────────────────────────────────────────────────────┐
+│              FastAPI Backend (uvicorn)                         │
+│     Session management · Chart/SQL extraction                 │
+└────────────────────────────┬───────────────────────────────────┘
+                             │
+                             ▼
+                  ┌───────────────────────┐
+                  │        LEADER         │
+                  │                       │
+                  │  Routes to the right  │
+                  │  specialist. Synth-   │
+                  │  esizes the answer.   │
+                  │  No SQL access.       │
+                  └──────────┬────────────┘
+                             │
+                  ┌──────────┴──────────┐
+                  ▼                     ▼
+          ┌───────────────┐   ┌──────────────────┐
+          │   ANALYST     │   │    ENGINEER      │
+          │               │   │                  │
+          │ Answers data  │   │ Builds views and │
+          │ questions     │   │ summary tables   │
+          │ with SQL.     │   │ in dash schema.  │
+          │ (READ ONLY)   │   │ (WRITE: dash.*)  │
+          └──────┬────────┘   └────────┬─────────┘
+                 │                     │
+                 ▼                     ▼
+             Snowflake             Snowflake
+         (TPCDS_SF100TCL.*)    (DASH_AGENT.dash.*)
 ```
 
 ---
@@ -118,17 +124,14 @@ This means the agent knows which table to query, which column to use for revenue
 
 Every response that contains data is automatically formatted by the agent and rendered natively in the UI — no user action required.
 
-### Tables
-When a result has multiple rows, the agent always formats it as a **GitHub-flavoured markdown table** (never bullet points). Numeric columns are right-aligned and large numbers are formatted with SI suffixes (`$14.2T`, `3.5M`). Streamlit renders these natively.
-
-### Charts
-When the data is also visually meaningful, the agent appends a structured `chart` block which `app.py` extracts, strips from the displayed text, and renders as an interactive Plotly figure. The chart block is **never visible to the user** — only the rendered figure is shown.
+### Charts (Primary Output)
+Charts are the **dominant output format**. Whenever a query returns ≥ 2 data points, the agent emits a structured `chart` block. The backend extracts this JSON from the response and sends it as a separate field to the frontend, which renders it using **Recharts** with a custom dark-themed configuration.
 
 **Supported chart types:**
 
 | Type | When used |
 |------|----------|
-| `bar` | Comparing ≤ 8 categories by a single metric |
+| `bar` | Comparing categories by a single metric |
 | `horizontal_bar` | Same, but with long labels or > 8 items |
 | `line` | Ordered time series (monthly, yearly trends) |
 | `pie` | Part-of-whole with ≤ 6 slices |
@@ -137,10 +140,13 @@ When the data is also visually meaningful, the agent appends a structured `chart
 
 **Multi-series charts:** When the result spans both a time/category dimension and a grouping dimension (e.g. monthly revenue broken out by Store / Catalog / Web), the agent uses a `series` format that produces one line or bar group per category — not a flattened single series.
 
+### Tables
+Tables are a secondary format, included only when the chart alone cannot convey important non-numeric context (e.g. item descriptions alongside revenue). The agent formats these as GitHub-flavoured markdown tables, rendered in the frontend via `react-markdown` with `remark-gfm`.
+
 **Implementation:**
-- `extract_chart(text)` — regex extracts the `chart` JSON block and returns `(spec, cleaned_text)`. The block is removed from displayed markdown.
-- `render_chart(spec)` — builds a `plotly.graph_objects` figure and renders it via `st.components.v1.html()` using Plotly loaded from CDN. This bypasses Streamlit's bundled `PlotlyChart.js` to avoid dynamic-import failures in proxied/tunnelled environments.
-- Charts are stored in `st.session_state.chart_map` (keyed by message index) and re-rendered on page reload.
+- Backend `extract_chart(text)` — regex extracts the `chart` JSON block and returns `(spec, cleaned_text)` as separate fields in the API response.
+- Frontend `DashChart` component — renders Recharts figures with dark theme, custom tooltip, SI-suffix axis formatting, and multi-series support.
+- Frontend `ChatMessage` component — renders markdown content with full GFM support (tables, code blocks, lists, links).
 
 ---
 
@@ -223,10 +229,27 @@ python scripts/load_knowledge.py --recreate
 ```
 
 ### 5. Run the App
+
+**Backend** (FastAPI):
+```bash
+uvicorn backend.main:app --reload --port 8000
+```
+
+**Frontend** (React + Vite):
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Opens at `http://localhost:5173`. The Vite dev server proxies `/api` requests to the backend on port 8000.
+
+See `Sample_Questions.md` for questions to try.
+
+**Legacy Streamlit UI** (still available):
 ```bash
 streamlit run app.py
 ```
-Opens at `http://localhost:8501`. See `Sample_Questions.md` for questions to try.
 
 ---
 
@@ -254,10 +277,33 @@ python -m evals smoke --verbose
 
 ```text
 .
-├── app.py                          # Streamlit chat UI
-├── requirements.txt
+├── app.py                          # Legacy Streamlit chat UI
+├── requirements.txt                # Python dependencies (incl. FastAPI, uvicorn)
 ├── .env                            # Environment variables (not committed)
 ├── Sample_Questions.md             # Example prompts to try
+│
+├── backend/                        # FastAPI backend
+│   ├── main.py                     # App factory, CORS, router registration
+│   ├── agent_session.py            # Thread-safe agent session management
+│   └── routes/
+│       ├── chat.py                 # POST /api/chat, POST /api/chat/clear
+│       └── health.py               # GET /health
+│
+├── frontend/                       # React frontend (Vite + Tailwind)
+│   ├── package.json
+│   ├── vite.config.js              # Dev server proxy to backend (5min timeout)
+│   ├── tailwind.config.js
+│   ├── index.html
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx                 # Layout: Sidebar + Chat/Welcome
+│       ├── index.css               # Tailwind + prose/chart overrides
+│       └── components/
+│           ├── Sidebar.jsx         # Agents, data source, capabilities, samples
+│           ├── WelcomeScreen.jsx   # Landing page with suggestion cards
+│           ├── ChatArea.jsx        # Full-width message list + input
+│           ├── ChatMessage.jsx     # Markdown + chart + SQL toggle per message
+│           └── DashChart.jsx       # Recharts renderer (bar, line, pie, etc.)
 │
 ├── evals/                          # Smoke test suite
 │   ├── __init__.py                 # Category registry
@@ -266,13 +312,7 @@ python -m evals smoke --verbose
 │
 ├── knowledge/                      # Pre-loaded into ChromaDB at startup
 │   ├── tables/                     # 24 TPC-DS table metadata JSONs
-│   │   ├── store_sales.json
-│   │   ├── catalog_sales.json
-│   │   ├── web_sales.json
-│   │   └── ... (21 more)
-│   ├── queries/                    # Validated SQL query patterns
-│   │   ├── top_items_by_revenue.sql
-│   │   └── ... (11 more)
+│   ├── queries/                    # Validated SQL query patterns (12 files)
 │   └── business/
 │       └── tpcds_retail_rules.json # Metrics, gotchas, channel mappings
 │
@@ -286,9 +326,6 @@ python -m evals smoke --verbose
 └── src/dash_strands/
     ├── config.py                   # Env var loader (all settings in one place)
     ├── instructions.py             # Dynamic system prompt builders
-    │                               #   build_analyst_instructions()
-    │                               #   build_engineer_instructions()
-    │                               #   build_leader_instructions()
     │
     ├── context/                    # Runtime context injected into prompts
     │   ├── semantic_model.py       # Reads tables/*.json → SEMANTIC MODEL section
@@ -301,8 +338,6 @@ python -m evals smoke --verbose
     │
     ├── db/
     │   └── __init__.py             # Snowflake SQLAlchemy engine factory
-    │                               #   get_readonly_engine() — SNOWFLAKE_SAMPLE_DATA
-    │                               #   get_write_engine()    — DASH_AGENT.dash
     │
     ├── knowledge/
     │   └── store.py                # ChromaDB client + Azure embedding function
@@ -311,7 +346,7 @@ python -m evals smoke --verbose
         ├── introspect_schema.py    # introspect_schema(action, table_name)
         ├── knowledge_search.py     # knowledge_search(query)
         ├── save_learning.py        # save_learning(problem, fix)
-        ├── save_validated_query.py # save_validated_query(name, description, sql)
+        ├── save_validated_query.py  # save_validated_query(name, description, sql)
         ├── sql_dash_write.py       # execute_sql_dash(sql) — write to dash schema
         ├── sql_readonly.py         # execute_sql_readonly(sql) — read-only + safety guard
         └── update_knowledge.py     # update_knowledge(object_name, ...) — register dash views
@@ -329,9 +364,11 @@ python -m evals smoke --verbose
 | **Data Warehouse** | Snowflake (`SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL`) | 100TB TPC-DS retail dataset |
 | **Agent Workspace** | Snowflake (`DASH_AGENT.dash`) | Views and summary tables built by the Engineer |
 | **Vector Store** | ChromaDB (local persistent) | Knowledge base and learnings memory |
-| **UI** | Streamlit | Chat interface |
-| **Charting** | Plotly (`plotly.graph_objects`) + CDN rendering | Interactive charts rendered via `st.components.v1.html` |
-| **Language** | Python 3.11+ | — |
+| **Backend** | FastAPI + Uvicorn | REST API serving the agent |
+| **Frontend** | React 18 + Vite + Tailwind CSS | Chat interface |
+| **Charting** | Recharts | Dark-themed interactive charts (bar, line, pie, scatter) |
+| **Markdown** | react-markdown + remark-gfm | Rich text rendering (tables, code, lists) |
+| **Language** | Python 3.11+ / JavaScript (ES2022) | — |
 
 ---
 
@@ -340,8 +377,8 @@ python -m evals smoke --verbose
 - **Query cost** — Fact tables have hundreds of billions of rows. The Analyst enforces date filters via a pre-flight safety guard that blocks queries without a `D_YEAR` filter before they hit Snowflake. Vague questions may still be expensive.
 - **TPC-DS date range** — All data covers years 1998–2002. Questions about "current" data default to 2001.
 - **ChromaDB is local** — The vector store lives in `./chroma_data`. It is not shared across machines. Each new environment needs its own `load_knowledge.py` run.
-- **No streaming** — Responses appear all at once after the agent finishes. Long multi-step queries may feel slow.
-- **SQL extraction is heuristic** — The "View SQL" expander in the UI uses regex to find SQL blocks in responses. Complex multi-block responses may not extract cleanly.
+- **No streaming** — Responses appear all at once after the agent finishes. Long multi-step queries may feel slow (the frontend shows an animated "Analyzing..." indicator during waits).
+- **SQL extraction is heuristic** — The "SQL Query" toggle in the UI uses regex to find SQL blocks in responses. Complex multi-block responses may not extract cleanly.
 
 ---
 
