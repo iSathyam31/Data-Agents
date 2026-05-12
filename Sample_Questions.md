@@ -12,15 +12,15 @@ Here are some example questions you can ask the Dash agent in the Streamlit UI t
 
 ### Returns & Profitability
 * *"What is the overall return rate for store sales in 2001?"*
-* *"Which product category has the highest return rate?"*
+* *"Which product category has the highest return rate?"*           
 * *"Show me items where the return rate is more than 3x the category average."*
 * *"What is the net loss from returns broken down by sales channel?"*
 
 ### Customers & Demographics
 * *"Break down store sales revenue by customer income band for 2001."*
 * *"Which customer education level drives the most catalog sales?"*
-* *"Show me revenue from preferred customers vs. non-preferred customers."*
-* *"Who are our top 20 highest-value customers by total spend?"*
+* *"Show me revenue from preferred customers vs. non-preferred customers."*  ----- TAKING A LOT OF TIME
+* *"Who are our top 20 highest-value customers by total spend?"* ---- TAKING A LOT OF TIME
 
 ### Promotions & Inventory
 * *"Which promotions generated the highest incremental revenue in 2001?"*
