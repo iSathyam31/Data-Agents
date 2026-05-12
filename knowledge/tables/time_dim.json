@@ -1,71 +1,40 @@
 {
     "table_name": "TIME_DIM",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.TIME_DIM",
-    "table_description": "Time-of-day dimension with one row per second (86,400 rows total). Used to analyze sales patterns by time of day, shift, meal time, and AM/PM period. Sales fact tables join to this via their _SOLD_TIME_SK columns.",
+    "table_description": "Time-of-day dimension. Contains one row per second of the day (86,400 rows).",
     "use_cases": [
-        "Peak sales hour analysis",
-        "Morning vs afternoon vs evening sales patterns",
-        "Shift-level performance comparison",
-        "Meal time sales analysis (breakfast, lunch, dinner periods)"
+        "Intraday sales patterns",
+        "Peak hour analysis"
     ],
     "data_quality_notes": [
-        "T_TIME_SK is the integer second of the day (0-86399). Join from fact tables on SS_SOLD_TIME_SK etc.",
-        "T_HOUR is 0-23 (24-hour format).",
-        "T_AM_PM is 'AM' or 'PM'.",
-        "T_SHIFT values: 'first', 'second', 'third' — representing working shifts.",
-        "T_MEAL_TIME values: 'breakfast', 'lunch', 'dinner', or NULL for non-meal periods."
+        "T_TIME_SK is surrogate key",
+        "Only STORE_SALES has a time dimension FK (SS_SOLD_TIME_SK)",
+        "Small table"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "T_TIME_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key (seconds since midnight, 0-86399). Join from fact time SK columns."
-        },
-        {
-            "name": "T_TIME_ID",
-            "type": "VARCHAR",
-            "description": "Business key for the time record."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "T_TIME",
-            "type": "NUMBER",
-            "description": "Time as integer seconds since midnight."
+            "type": "INT",
+            "description": "Seconds since midnight"
         },
         {
             "name": "T_HOUR",
-            "type": "NUMBER",
-            "description": "Hour of day (0-23)."
+            "type": "INT",
+            "description": "Hour (0-23)"
         },
         {
             "name": "T_MINUTE",
-            "type": "NUMBER",
-            "description": "Minute (0-59)."
-        },
-        {
-            "name": "T_SECOND",
-            "type": "NUMBER",
-            "description": "Second (0-59)."
-        },
-        {
-            "name": "T_AM_PM",
-            "type": "VARCHAR",
-            "description": "'AM' or 'PM'."
-        },
-        {
-            "name": "T_SHIFT",
-            "type": "VARCHAR",
-            "description": "Work shift: 'first', 'second', or 'third'."
-        },
-        {
-            "name": "T_SUB_SHIFT",
-            "type": "VARCHAR",
-            "description": "Sub-shift designation."
+            "type": "INT",
+            "description": "Minute (0-59)"
         },
         {
             "name": "T_MEAL_TIME",
             "type": "VARCHAR",
-            "description": "Meal period: 'breakfast', 'lunch', 'dinner', or NULL outside meal times."
+            "description": "Meal time category"
         }
     ]
 }

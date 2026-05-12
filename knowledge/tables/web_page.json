@@ -1,90 +1,44 @@
 {
     "table_name": "WEB_PAGE",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.WEB_PAGE",
-    "table_description": "Dimension table for individual web pages within a website. SCD Type 2. Referenced by WEB_SALES.WS_WEB_PAGE_SK and WEB_RETURNS.WR_WEB_PAGE_SK. Describes page characteristics like type, content richness, and link count — useful for analyzing which page types drive conversions.",
+    "table_description": "Web page dimension. Individual pages on the web sites.",
     "use_cases": [
-        "Web page conversion and revenue analysis",
-        "Page type sales performance (product pages vs landing pages)",
-        "Content richness vs sales correlation",
-        "Auto-generated vs manually created page performance"
+        "Page-level attribution",
+        "Web page performance"
     ],
     "data_quality_notes": [
-        "SCD Type 2 — WP_REC_END_DATE IS NULL for current pages.",
-        "WP_AUTOGEN_FLAG: 'Y' if the page was auto-generated, 'N' if manually created.",
-        "WP_CHAR_COUNT is the character count of the page content.",
-        "WP_LINK_COUNT, WP_IMAGE_COUNT, WP_MAX_AD_COUNT describe page content structure."
+        "WP_WEB_PAGE_SK is the surrogate key",
+        "SCD Type 2"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "WP_WEB_PAGE_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by WEB_SALES.WS_WEB_PAGE_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "WP_WEB_PAGE_ID",
             "type": "VARCHAR",
-            "description": "Business key."
-        },
-        {
-            "name": "WP_REC_START_DATE",
-            "type": "DATE",
-            "description": "SCD start date."
-        },
-        {
-            "name": "WP_REC_END_DATE",
-            "type": "DATE",
-            "description": "SCD end date. NULL = currently active."
-        },
-        {
-            "name": "WP_CREATION_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. When the page was created."
-        },
-        {
-            "name": "WP_ACCESS_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Last access date."
-        },
-        {
-            "name": "WP_AUTOGEN_FLAG",
-            "type": "VARCHAR",
-            "description": "'Y' if auto-generated, 'N' if hand-crafted."
-        },
-        {
-            "name": "WP_CUSTOMER_SK",
-            "type": "NUMBER",
-            "description": "FK to CUSTOMER. Customer associated with this page (e.g. personalized page)."
-        },
-        {
-            "name": "WP_URL",
-            "type": "VARCHAR",
-            "description": "Page URL."
+            "description": "Business key"
         },
         {
             "name": "WP_TYPE",
             "type": "VARCHAR",
-            "description": "Page type: 'welcome', 'dynamic', 'order', 'notice', 'feedback', 'reviews'."
+            "description": "Page type"
         },
         {
             "name": "WP_CHAR_COUNT",
-            "type": "NUMBER",
-            "description": "Character count of page content."
+            "type": "INT",
+            "description": "Character count"
         },
         {
             "name": "WP_LINK_COUNT",
-            "type": "NUMBER",
-            "description": "Number of outbound links on the page."
+            "type": "INT",
+            "description": "Link count"
         },
         {
             "name": "WP_IMAGE_COUNT",
-            "type": "NUMBER",
-            "description": "Number of images on the page."
-        },
-        {
-            "name": "WP_MAX_AD_COUNT",
-            "type": "NUMBER",
-            "description": "Maximum number of ads displayed on the page."
+            "type": "INT",
+            "description": "Image count"
         }
     ]
 }

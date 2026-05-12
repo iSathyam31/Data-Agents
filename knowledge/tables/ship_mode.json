@@ -1,50 +1,54 @@
 {
     "table_name": "SHIP_MODE",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.SHIP_MODE",
-    "table_description": "Small dimension table (20 rows) listing the shipping methods available for catalog and web channel orders. Referenced by CATALOG_SALES.CS_SHIP_MODE_SK and WEB_SALES.WS_SHIP_MODE_SK. Used to analyze shipping method preferences and their impact on revenue and return rates.",
+    "table_description": "Shipping mode dimension table. Contains different shipping methods (e.g., REGULAR, EXPRESS, OVERNIGHT) used for catalog and web orders. Very small table (~20 rows). Referenced by CATALOG_SALES (CS_SHIP_MODE_SK), CATALOG_RETURNS (CR_SHIP_MODE_SK), and WEB_SALES (WS_SHIP_MODE_SK).",
     "use_cases": [
-        "Shipping method preference by channel",
-        "Shipping mode impact on return rates",
-        "Carrier performance comparison",
-        "Shipping type distribution"
+        "Analyze shipping method preferences by channel",
+        "Compare delivery costs and timelines by ship mode",
+        "Shipping carrier performance analysis",
+        "Order fulfillment analysis by shipping type"
     ],
     "data_quality_notes": [
-        "SM_TYPE values: 'LIBRARY', 'EXPRESS', 'NEXT DAY AIR', 'TWO DAY', 'SURFACE', etc.",
-        "SM_CODE is a short code for the shipping mode.",
-        "SM_CARRIER is the carrier name (e.g. 'DHL', 'FEDEX', 'AIRBORNE').",
-        "SM_CONTRACT is a contract reference number."
+        "Very small dimension (~20 rows), safe to scan without filters",
+        "SM_SHIP_MODE_SK is the surrogate key used in fact table joins",
+        "SM_TYPE contains the shipping speed category (e.g., REGULAR, EXPRESS)",
+        "SM_CARRIER identifies the shipping carrier company"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "SM_SHIP_MODE_SK",
             "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by CATALOG_SALES.CS_SHIP_MODE_SK and WEB_SALES.WS_SHIP_MODE_SK."
+            "description": "Surrogate primary key. Join key for fact tables.",
+            "nullable": false
         },
         {
             "name": "SM_SHIP_MODE_ID",
-            "type": "VARCHAR",
-            "description": "Business key."
+            "type": "TEXT",
+            "description": "Business/natural key for the shipping mode.",
+            "nullable": false
         },
         {
             "name": "SM_TYPE",
-            "type": "VARCHAR",
-            "description": "Shipping type description: 'EXPRESS', 'NEXT DAY AIR', 'TWO DAY', 'SURFACE', 'LIBRARY', etc."
+            "type": "TEXT",
+            "description": "Shipping type/speed category (e.g., REGULAR, EXPRESS, OVERNIGHT, LIBRARY, TWO DAY).",
+            "nullable": true
         },
         {
             "name": "SM_CODE",
-            "type": "VARCHAR",
-            "description": "Short code for the shipping mode."
+            "type": "TEXT",
+            "description": "Shipping mode code (e.g., AIR, SURFACE, SEA).",
+            "nullable": true
         },
         {
             "name": "SM_CARRIER",
-            "type": "VARCHAR",
-            "description": "Carrier name (e.g. 'DHL', 'FEDEX', 'UPS')."
+            "type": "TEXT",
+            "description": "Shipping carrier name (e.g., FEDEX, UPS, DHL, USPS).",
+            "nullable": true
         },
         {
             "name": "SM_CONTRACT",
-            "type": "VARCHAR",
-            "description": "Contract reference number."
+            "type": "TEXT",
+            "description": "Contract identifier for the shipping arrangement.",
+            "nullable": true
         }
     ]
 }

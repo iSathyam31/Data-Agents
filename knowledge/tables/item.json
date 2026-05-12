@@ -1,135 +1,84 @@
 {
     "table_name": "ITEM",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.ITEM",
-    "table_description": "Product dimension table containing over 500,000 item records. Each row describes one product version (items are slowly changing — a price change creates a new row with a new REC_START_DATE). Contains a rich product hierarchy: category > class > brand > manufacturer, plus size, color, units, and pricing.",
+    "table_description": "Item/product dimension. Contains product attributes including category, brand, class, manufacturer, and pricing for ~500K items.",
     "use_cases": [
-        "Product category and brand performance analysis",
-        "Price elasticity analysis (list price vs sales price)",
-        "Margin analysis using wholesale cost vs selling price",
-        "Product color and size preference analysis",
-        "Top selling items by revenue, quantity, or profit",
-        "Category-level sales breakdown"
+        "Product performance analysis",
+        "Category/brand sales ranking",
+        "Product attribute segmentation",
+        "Price point analysis"
     ],
     "data_quality_notes": [
-        "ITEM is a slowly changing dimension (SCD Type 2) — one item can have multiple rows with different I_REC_START_DATE and I_REC_END_DATE. To get current items: WHERE I_REC_END_DATE IS NULL or use the most recent record.",
-        "I_CATEGORY values include: 'Women', 'Men', 'Children', 'Shoes', 'Music', 'Jewelry', 'Sports', 'Books', 'Home', 'Electronics' — these are the top-level product groupings.",
-        "I_CLASS is the subcategory under I_CATEGORY.",
-        "I_BRAND is the brand name; I_BRAND_ID is the numeric brand ID.",
-        "I_MANUFACT is the manufacturer name.",
-        "I_CURRENT_PRICE is the current retail price. I_WHOLESALE_COST is the cost to the retailer.",
-        "Gross margin per item = (I_CURRENT_PRICE - I_WHOLESALE_COST) / I_CURRENT_PRICE."
+        "I_ITEM_SK is the surrogate key for all fact table joins",
+        "I_ITEM_ID is the natural/business key",
+        "I_REC_START_DATE / I_REC_END_DATE implement SCD Type 2 — same item can have multiple rows",
+        "I_CURRENT_PRICE is the current list price, not what was actually charged",
+        "I_CATEGORY and I_CLASS form a product hierarchy: category > class > item"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "I_ITEM_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Used in all sales and inventory fact tables."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "I_ITEM_ID",
             "type": "VARCHAR",
-            "description": "Business key for the item. Same item across SCD versions shares I_ITEM_ID."
-        },
-        {
-            "name": "I_REC_START_DATE",
-            "type": "DATE",
-            "description": "When this version of the item record became active (SCD Type 2)."
-        },
-        {
-            "name": "I_REC_END_DATE",
-            "type": "DATE",
-            "description": "When this item version expired. NULL means currently active."
+            "description": "Business key"
         },
         {
             "name": "I_ITEM_DESC",
             "type": "VARCHAR",
-            "description": "Free-text product description."
+            "description": "Product description"
         },
         {
             "name": "I_CURRENT_PRICE",
-            "type": "FLOAT",
-            "description": "Current retail price. Use for margin analysis."
+            "type": "DECIMAL",
+            "description": "Current list price"
         },
         {
             "name": "I_WHOLESALE_COST",
-            "type": "FLOAT",
-            "description": "Retailer's cost to stock this item. Gross margin = I_CURRENT_PRICE - I_WHOLESALE_COST."
-        },
-        {
-            "name": "I_BRAND_ID",
-            "type": "NUMBER",
-            "description": "Numeric brand identifier."
+            "type": "DECIMAL",
+            "description": "Wholesale cost"
         },
         {
             "name": "I_BRAND",
             "type": "VARCHAR",
-            "description": "Brand name string."
-        },
-        {
-            "name": "I_CLASS_ID",
-            "type": "NUMBER",
-            "description": "Numeric class identifier (product subcategory)."
+            "description": "Brand name"
         },
         {
             "name": "I_CLASS",
             "type": "VARCHAR",
-            "description": "Product class (subcategory under category)."
-        },
-        {
-            "name": "I_CATEGORY_ID",
-            "type": "NUMBER",
-            "description": "Numeric category identifier."
+            "description": "Product class (sub-category)"
         },
         {
             "name": "I_CATEGORY",
             "type": "VARCHAR",
-            "description": "Top-level product category: Women, Men, Children, Shoes, Music, Jewelry, Sports, Books, Home, Electronics."
-        },
-        {
-            "name": "I_MANUFACT_ID",
-            "type": "NUMBER",
-            "description": "Manufacturer numeric ID."
+            "description": "Product category (top level)"
         },
         {
             "name": "I_MANUFACT",
             "type": "VARCHAR",
-            "description": "Manufacturer name."
+            "description": "Manufacturer name"
         },
         {
             "name": "I_SIZE",
             "type": "VARCHAR",
-            "description": "Product size: small, medium, large, extra large, N/A, petite, etc."
-        },
-        {
-            "name": "I_FORMULATION",
-            "type": "VARCHAR",
-            "description": "Product formulation or composition descriptor."
+            "description": "Product size"
         },
         {
             "name": "I_COLOR",
             "type": "VARCHAR",
-            "description": "Product color name."
+            "description": "Product color"
         },
         {
-            "name": "I_UNITS",
-            "type": "VARCHAR",
-            "description": "Unit of measure: Each, Dozen, Pound, Ounce, etc."
+            "name": "I_REC_START_DATE",
+            "type": "DATE",
+            "description": "SCD2 start date"
         },
         {
-            "name": "I_CONTAINER",
-            "type": "VARCHAR",
-            "description": "Container or packaging type."
-        },
-        {
-            "name": "I_MANAGER_ID",
-            "type": "NUMBER",
-            "description": "Category manager ID responsible for this item."
-        },
-        {
-            "name": "I_PRODUCT_NAME",
-            "type": "VARCHAR",
-            "description": "Product name string."
+            "name": "I_REC_END_DATE",
+            "type": "DATE",
+            "description": "SCD2 end date — NULL means current"
         }
     ]
 }

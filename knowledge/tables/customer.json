@@ -1,115 +1,63 @@
 {
     "table_name": "CUSTOMER",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.CUSTOMER",
-    "table_description": "Dimension table containing 100 million customer records. Each row is one unique customer with personal details, preferences, and birth information. This is the central customer dimension — join to STORE_SALES, CATALOG_SALES, or WEB_SALES via their respective customer SK foreign keys.",
+    "table_description": "Customer dimension. Contains demographic and geographic information for ~100M customers in SF100TCL.",
     "use_cases": [
-        "Customer segmentation by demographics",
-        "Customer lifetime value analysis",
-        "Preferred customer identification",
-        "Customer acquisition cohort analysis (first sale date)",
-        "Email marketing segment identification",
-        "Geographic customer distribution"
+        "Customer segmentation",
+        "Demographic analysis",
+        "Geographic sales distribution",
+        "Customer lifetime value"
     ],
     "data_quality_notes": [
-        "C_PREFERRED_CUST_FLAG is 'Y' or 'N' — not a boolean. Always use = 'Y' to filter preferred customers.",
-        "C_BIRTH_YEAR, C_BIRTH_MONTH, C_BIRTH_DAY store date parts separately — reconstruct as DATE using TRY_TO_DATE(C_BIRTH_YEAR||'-'||C_BIRTH_MONTH||'-'||C_BIRTH_DAY) for age calculations.",
-        "C_CURRENT_ADDR_SK is the current address — join to CUSTOMER_ADDRESS for the latest address.",
-        "C_CURRENT_CDEMO_SK links to CUSTOMER_DEMOGRAPHICS for current demographic profile.",
-        "C_FIRST_SALES_DATE_SK is when the customer made their first purchase ever.",
-        "C_EMAIL_ADDRESS may be NULL for older customer records.",
-        "C_LOGIN can be NULL for customers who have not registered an online account."
+        "C_CUSTOMER_SK is the surrogate key — use this for joins to fact tables",
+        "C_CUSTOMER_ID is the natural/business key",
+        "C_CURRENT_ADDR_SK links to current address in CUSTOMER_ADDRESS",
+        "C_FIRST_SALES_DATE_SK and C_FIRST_SHIPTO_DATE_SK track acquisition dates"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "C_CUSTOMER_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Used as FK in all sales fact tables."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "C_CUSTOMER_ID",
             "type": "VARCHAR",
-            "description": "Business key (natural key) for the customer. Unique alphanumeric ID."
-        },
-        {
-            "name": "C_CURRENT_CDEMO_SK",
-            "type": "NUMBER",
-            "description": "FK to CUSTOMER_DEMOGRAPHICS. Current demographic profile."
-        },
-        {
-            "name": "C_CURRENT_HDEMO_SK",
-            "type": "NUMBER",
-            "description": "FK to HOUSEHOLD_DEMOGRAPHICS. Current household profile."
+            "description": "Business key"
         },
         {
             "name": "C_CURRENT_ADDR_SK",
-            "type": "NUMBER",
-            "description": "FK to CUSTOMER_ADDRESS. Current address. Can be NULL."
-        },
-        {
-            "name": "C_FIRST_SHIPTO_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Date of first ship-to transaction."
-        },
-        {
-            "name": "C_FIRST_SALES_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Date of first purchase ever. Use for cohort analysis."
-        },
-        {
-            "name": "C_SALUTATION",
-            "type": "VARCHAR",
-            "description": "Title: Mr., Mrs., Ms., Dr., etc."
+            "type": "INT",
+            "description": "FK to CUSTOMER_ADDRESS"
         },
         {
             "name": "C_FIRST_NAME",
             "type": "VARCHAR",
-            "description": "Customer first name."
+            "description": "First name"
         },
         {
             "name": "C_LAST_NAME",
             "type": "VARCHAR",
-            "description": "Customer last name."
-        },
-        {
-            "name": "C_PREFERRED_CUST_FLAG",
-            "type": "VARCHAR",
-            "description": "Preferred customer flag: 'Y' or 'N'. Not a boolean — use = 'Y'."
-        },
-        {
-            "name": "C_BIRTH_DAY",
-            "type": "NUMBER",
-            "description": "Day of birth (1-31). Combined with C_BIRTH_MONTH and C_BIRTH_YEAR for full birthdate."
-        },
-        {
-            "name": "C_BIRTH_MONTH",
-            "type": "NUMBER",
-            "description": "Month of birth (1-12)."
+            "description": "Last name"
         },
         {
             "name": "C_BIRTH_YEAR",
-            "type": "NUMBER",
-            "description": "Year of birth (e.g. 1975). Use for age calculation."
+            "type": "INT",
+            "description": "Birth year"
         },
         {
             "name": "C_BIRTH_COUNTRY",
             "type": "VARCHAR",
-            "description": "Country of birth."
-        },
-        {
-            "name": "C_LOGIN",
-            "type": "VARCHAR",
-            "description": "Online login username. NULL if no online account."
+            "description": "Country of birth"
         },
         {
             "name": "C_EMAIL_ADDRESS",
             "type": "VARCHAR",
-            "description": "Email address. May be NULL."
+            "description": "Email"
         },
         {
-            "name": "C_LAST_REVIEW_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Date of last account review."
+            "name": "C_PREFERRED_CUST_FLAG",
+            "type": "VARCHAR",
+            "description": "Y/N preferred customer"
         }
     ]
 }

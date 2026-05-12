@@ -1,118 +1,55 @@
 {
     "table_name": "PROMOTION",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.PROMOTION",
-    "table_description": "Dimension table describing marketing promotions. Each row is one promotion with date range, discount percentage, channels used, and cost. Promotions link to sales fact tables via the PROMO_SK columns (SS_PROMO_SK, CS_PROMO_SK, WS_PROMO_SK). Used to measure campaign effectiveness and ROI.",
+    "table_description": "Promotion dimension. Details of promotions applied to sales transactions.",
     "use_cases": [
-        "Promotion ROI analysis (revenue uplift vs promotion cost)",
-        "Channel effectiveness: which channel drove more sales per promotion",
-        "Discount depth impact on sales volume",
-        "Active promotions at any point in time",
-        "Response rate comparison across promotion types"
+        "Promotion effectiveness",
+        "Discount analysis",
+        "Channel-specific promo performance"
     ],
     "data_quality_notes": [
-        "P_CHANNEL_* columns are 'Y' or 'N' flags — not booleans. There are 8 channel columns.",
-        "P_DISCOUNT_ACTIVE is 'Y' or 'N' — whether the discount is currently active.",
-        "P_COST is the total cost of running the promotion (marketing spend), not the discount amount.",
-        "P_RESPONSE_TARGET is an integer from 1-3 indicating the intended audience size.",
-        "Promotions with P_PROMO_SK = NULL in fact tables represent no promotion applied.",
-        "P_START_DATE_SK and P_END_DATE_SK define the promotion window — join to DATE_DIM for date filtering."
+        "P_PROMO_SK is the surrogate key",
+        "P_CHANNEL_* flags indicate which channels the promo ran on"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "P_PROMO_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by sales facts as PROMO_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "P_PROMO_ID",
             "type": "VARCHAR",
-            "description": "Business key for the promotion."
-        },
-        {
-            "name": "P_START_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Promotion start date."
-        },
-        {
-            "name": "P_END_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Promotion end date."
-        },
-        {
-            "name": "P_ITEM_SK",
-            "type": "NUMBER",
-            "description": "FK to ITEM. The item this promotion applies to."
-        },
-        {
-            "name": "P_COST",
-            "type": "FLOAT",
-            "description": "Total marketing cost to run this promotion."
-        },
-        {
-            "name": "P_RESPONSE_TARGET",
-            "type": "NUMBER",
-            "description": "Target audience size indicator (1-3)."
+            "description": "Business key"
         },
         {
             "name": "P_PROMO_NAME",
             "type": "VARCHAR",
-            "description": "Human-readable promotion name."
+            "description": "Promotion name"
         },
         {
-            "name": "P_CHANNEL_DMAIL",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used direct mail channel."
+            "name": "P_START_DATE_SK",
+            "type": "INT",
+            "description": "FK to DATE_DIM — promo start"
         },
         {
-            "name": "P_CHANNEL_EMAIL",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used email channel."
-        },
-        {
-            "name": "P_CHANNEL_CATALOG",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used catalog channel."
+            "name": "P_END_DATE_SK",
+            "type": "INT",
+            "description": "FK to DATE_DIM — promo end"
         },
         {
             "name": "P_CHANNEL_TV",
             "type": "VARCHAR",
-            "description": "'Y' if promotion used television channel."
+            "description": "Y/N TV channel"
         },
         {
-            "name": "P_CHANNEL_RADIO",
+            "name": "P_CHANNEL_EMAIL",
             "type": "VARCHAR",
-            "description": "'Y' if promotion used radio channel."
-        },
-        {
-            "name": "P_CHANNEL_PRESS",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used print/press channel."
-        },
-        {
-            "name": "P_CHANNEL_EVENT",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used event/in-store channel."
-        },
-        {
-            "name": "P_CHANNEL_DEMO",
-            "type": "VARCHAR",
-            "description": "'Y' if promotion used product demo channel."
-        },
-        {
-            "name": "P_CHANNEL_DETAILS",
-            "type": "VARCHAR",
-            "description": "Free text description of promotion channel details."
-        },
-        {
-            "name": "P_PURPOSE",
-            "type": "VARCHAR",
-            "description": "Purpose of promotion: 'Unknown', 'Cross-sell', 'Upsell', etc."
+            "description": "Y/N email channel"
         },
         {
             "name": "P_DISCOUNT_ACTIVE",
             "type": "VARCHAR",
-            "description": "'Y' if the promotion discount is currently active, 'N' otherwise."
+            "description": "Y/N discount active"
         }
     ]
 }

@@ -1,45 +1,40 @@
 {
     "table_name": "HOUSEHOLD_DEMOGRAPHICS",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.HOUSEHOLD_DEMOGRAPHICS",
-    "table_description": "Small dimension table (~7,200 rows) representing unique combinations of household characteristics. Each row is a distinct combination of income band, buy potential, dependent count, and vehicle count. Referenced by sales fact tables as HDEMO_SK. Used for household-level demographic segmentation of purchasing behavior.",
+    "table_description": "Household demographics dimension. Income band, buy potential, household size, vehicle count.",
     "use_cases": [
-        "Household income band sales analysis",
-        "Buy potential correlation with actual spend",
-        "Household size (dependents) impact on purchasing",
-        "Vehicle ownership as a lifestyle spending indicator"
+        "Household segmentation",
+        "Buy potential analysis"
     ],
     "data_quality_notes": [
-        "HD_BUY_POTENTIAL values: '>10000', '1001-5000', '5001-10000', '501-1000', '0-500', 'Unknown'.",
-        "HD_INCOME_BAND_SK links to INCOME_BAND for the actual income range values.",
-        "HD_DEP_COUNT is number of dependents in the household.",
-        "HD_VEHICLE_COUNT is number of registered vehicles."
+        "HD_DEMO_SK is the surrogate key",
+        "HD_INCOME_BAND_SK joins to INCOME_BAND",
+        "Small dimension"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "HD_DEMO_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by sales fact tables as HDEMO_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "HD_INCOME_BAND_SK",
-            "type": "NUMBER",
-            "description": "FK to INCOME_BAND.IB_INCOME_BAND_SK. Links to the household income range."
+            "type": "INT",
+            "description": "FK to INCOME_BAND"
         },
         {
             "name": "HD_BUY_POTENTIAL",
             "type": "VARCHAR",
-            "description": "Estimated annual household buying potential bucket: '>10000', '5001-10000', '1001-5000', '501-1000', '0-500', 'Unknown'."
+            "description": "Buy potential category"
         },
         {
             "name": "HD_DEP_COUNT",
-            "type": "NUMBER",
-            "description": "Number of dependents in the household."
+            "type": "INT",
+            "description": "Dependents"
         },
         {
             "name": "HD_VEHICLE_COUNT",
-            "type": "NUMBER",
-            "description": "Number of registered vehicles in the household."
+            "type": "INT",
+            "description": "Vehicles owned"
         }
     ]
 }

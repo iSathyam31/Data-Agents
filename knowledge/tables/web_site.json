@@ -1,150 +1,38 @@
 {
     "table_name": "WEB_SITE",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.WEB_SITE",
-    "table_description": "Dimension table for web properties (e-commerce websites). SCD Type 2 — changes in management or classification create new rows. Referenced by WEB_SALES.WS_WEB_SITE_SK. Provides context about which web property generated which online sales.",
+    "table_description": "Web site dimension. Attributes of the company's web properties.",
     "use_cases": [
-        "Web site revenue and order volume comparison",
-        "Web site market and division performance",
-        "Tax rate analysis for web orders by site",
-        "Site manager performance reporting"
+        "Web site performance comparison"
     ],
     "data_quality_notes": [
-        "SCD Type 2 — WEB_REC_END_DATE IS NULL identifies current active record.",
-        "WEB_CLOSE_DATE_SK is NULL for active sites.",
-        "WEB_TAX_PERCENTAGE is a decimal (e.g. 0.05 = 5%).",
-        "The primary key column is WEB_SITE_SK (no prefix — different convention from other dimensions)."
+        "WEB_SITE_SK is the surrogate key",
+        "SCD Type 2 — WEB_REC_START_DATE / WEB_REC_END_DATE"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "WEB_SITE_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by WEB_SALES.WS_WEB_SITE_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "WEB_SITE_ID",
             "type": "VARCHAR",
-            "description": "Business key."
-        },
-        {
-            "name": "WEB_REC_START_DATE",
-            "type": "DATE",
-            "description": "SCD validity start date."
-        },
-        {
-            "name": "WEB_REC_END_DATE",
-            "type": "DATE",
-            "description": "SCD validity end date. NULL = currently active."
+            "description": "Business key"
         },
         {
             "name": "WEB_NAME",
             "type": "VARCHAR",
-            "description": "Website name."
+            "description": "Site name"
         },
         {
             "name": "WEB_OPEN_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Launch date."
+            "type": "INT",
+            "description": "FK to DATE_DIM — launch date"
         },
         {
             "name": "WEB_CLOSE_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. Closure date. NULL if still active."
-        },
-        {
-            "name": "WEB_CLASS",
-            "type": "VARCHAR",
-            "description": "Website classification."
-        },
-        {
-            "name": "WEB_MANAGER",
-            "type": "VARCHAR",
-            "description": "Site manager name."
-        },
-        {
-            "name": "WEB_MKT_ID",
-            "type": "NUMBER",
-            "description": "Market ID."
-        },
-        {
-            "name": "WEB_MKT_CLASS",
-            "type": "VARCHAR",
-            "description": "Market class."
-        },
-        {
-            "name": "WEB_MKT_DESC",
-            "type": "VARCHAR",
-            "description": "Market description."
-        },
-        {
-            "name": "WEB_MARKET_MANAGER",
-            "type": "VARCHAR",
-            "description": "Market manager name."
-        },
-        {
-            "name": "WEB_COMPANY_ID",
-            "type": "NUMBER",
-            "description": "Company ID."
-        },
-        {
-            "name": "WEB_COMPANY_NAME",
-            "type": "VARCHAR",
-            "description": "Company name."
-        },
-        {
-            "name": "WEB_STREET_NUMBER",
-            "type": "VARCHAR",
-            "description": "Office address street number."
-        },
-        {
-            "name": "WEB_STREET_NAME",
-            "type": "VARCHAR",
-            "description": "Street name."
-        },
-        {
-            "name": "WEB_STREET_TYPE",
-            "type": "VARCHAR",
-            "description": "Street type."
-        },
-        {
-            "name": "WEB_SUITE_NUMBER",
-            "type": "VARCHAR",
-            "description": "Suite number."
-        },
-        {
-            "name": "WEB_CITY",
-            "type": "VARCHAR",
-            "description": "City."
-        },
-        {
-            "name": "WEB_COUNTY",
-            "type": "VARCHAR",
-            "description": "County."
-        },
-        {
-            "name": "WEB_STATE",
-            "type": "VARCHAR",
-            "description": "State code."
-        },
-        {
-            "name": "WEB_ZIP",
-            "type": "VARCHAR",
-            "description": "ZIP code."
-        },
-        {
-            "name": "WEB_COUNTRY",
-            "type": "VARCHAR",
-            "description": "Country."
-        },
-        {
-            "name": "WEB_GMT_OFFSET",
-            "type": "FLOAT",
-            "description": "GMT timezone offset."
-        },
-        {
-            "name": "WEB_TAX_PERCENTAGE",
-            "type": "FLOAT",
-            "description": "Tax rate as decimal."
+            "type": "INT",
+            "description": "FK to DATE_DIM — close date (NULL=active)"
         }
     ]
 }

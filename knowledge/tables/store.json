@@ -1,170 +1,66 @@
 {
     "table_name": "STORE",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.STORE",
-    "table_description": "Physical retail store dimension. Each row describes one store location version (SCD Type 2 — store attributes like manager or hours can change over time, creating new rows). Contains store geography, size, staffing, market, and tax information. Join from STORE_SALES and STORE_RETURNS via their SS_STORE_SK / SR_STORE_SK columns.",
+    "table_description": "Store dimension. Physical retail store attributes including geography, size, and management.",
     "use_cases": [
-        "Store-level sales performance ranking",
-        "Regional and state-level store analysis",
-        "Store size (floor space) correlation with revenue",
-        "Manager-level performance reporting",
-        "Tax rate analysis by store location",
-        "Market and division level rollup reporting"
+        "Store performance comparison",
+        "Geographic sales analysis",
+        "Store size/type segmentation"
     ],
     "data_quality_notes": [
-        "STORE is SCD Type 2 — S_REC_END_DATE IS NULL identifies the current active record for each store.",
-        "S_STORE_ID is the business key — multiple rows with the same S_STORE_ID represent the same physical store at different points in time.",
-        "S_CLOSED_DATE_SK is NULL for open stores. A non-NULL value means the store has closed.",
-        "S_TAX_PRECENTAGE is the store's sales tax rate (note: typo in column name — 'PRECENTAGE' not 'PERCENTAGE'). It's a decimal (e.g. 0.08 = 8%).",
-        "S_HOURS is a text description of store operating hours.",
-        "S_FLOOR_SPACE is in square feet.",
-        "S_NUMBER_EMPLOYEES is headcount at the store."
+        "S_STORE_SK is the surrogate key",
+        "S_REC_START_DATE / S_REC_END_DATE implement SCD Type 2",
+        "S_CLOSED_DATE_SK — if NOT NULL, store is closed"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "S_STORE_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by STORE_SALES.SS_STORE_SK and STORE_RETURNS.SR_STORE_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "S_STORE_ID",
             "type": "VARCHAR",
-            "description": "Business key. Same physical store across SCD versions shares this ID."
-        },
-        {
-            "name": "S_REC_START_DATE",
-            "type": "DATE",
-            "description": "Start of this store record's validity (SCD Type 2)."
-        },
-        {
-            "name": "S_REC_END_DATE",
-            "type": "DATE",
-            "description": "End of validity. NULL = currently active store record."
-        },
-        {
-            "name": "S_CLOSED_DATE_SK",
-            "type": "NUMBER",
-            "description": "FK to DATE_DIM. NULL if store is open. Non-NULL if store has closed."
+            "description": "Business key"
         },
         {
             "name": "S_STORE_NAME",
             "type": "VARCHAR",
-            "description": "Store name string."
+            "description": "Store name"
         },
         {
             "name": "S_NUMBER_EMPLOYEES",
-            "type": "NUMBER",
-            "description": "Number of employees at this store."
+            "type": "INT",
+            "description": "Employee count"
         },
         {
             "name": "S_FLOOR_SPACE",
-            "type": "NUMBER",
-            "description": "Store floor space in square feet."
-        },
-        {
-            "name": "S_HOURS",
-            "type": "VARCHAR",
-            "description": "Store hours description (e.g. '8AM-11PM')."
-        },
-        {
-            "name": "S_MANAGER",
-            "type": "VARCHAR",
-            "description": "Store manager name."
-        },
-        {
-            "name": "S_MARKET_ID",
-            "type": "NUMBER",
-            "description": "Market area numeric ID."
-        },
-        {
-            "name": "S_GEOGRAPHY_CLASS",
-            "type": "VARCHAR",
-            "description": "Geographic classification (e.g. urban, suburban, rural)."
-        },
-        {
-            "name": "S_MARKET_DESC",
-            "type": "VARCHAR",
-            "description": "Description of the market area."
-        },
-        {
-            "name": "S_MARKET_MANAGER",
-            "type": "VARCHAR",
-            "description": "Name of the regional market manager."
-        },
-        {
-            "name": "S_DIVISION_ID",
-            "type": "NUMBER",
-            "description": "Division numeric ID."
-        },
-        {
-            "name": "S_DIVISION_NAME",
-            "type": "VARCHAR",
-            "description": "Division name."
-        },
-        {
-            "name": "S_COMPANY_ID",
-            "type": "NUMBER",
-            "description": "Company numeric ID."
-        },
-        {
-            "name": "S_COMPANY_NAME",
-            "type": "VARCHAR",
-            "description": "Company name."
-        },
-        {
-            "name": "S_STREET_NUMBER",
-            "type": "VARCHAR",
-            "description": "Street number of store address."
-        },
-        {
-            "name": "S_STREET_NAME",
-            "type": "VARCHAR",
-            "description": "Street name."
-        },
-        {
-            "name": "S_STREET_TYPE",
-            "type": "VARCHAR",
-            "description": "Street type (Ave, Blvd, etc.)."
-        },
-        {
-            "name": "S_SUITE_NUMBER",
-            "type": "VARCHAR",
-            "description": "Suite or unit number."
+            "type": "INT",
+            "description": "Floor space sq ft"
         },
         {
             "name": "S_CITY",
             "type": "VARCHAR",
-            "description": "City."
-        },
-        {
-            "name": "S_COUNTY",
-            "type": "VARCHAR",
-            "description": "County."
+            "description": "City"
         },
         {
             "name": "S_STATE",
             "type": "VARCHAR",
-            "description": "2-letter state code."
+            "description": "State"
         },
         {
             "name": "S_ZIP",
             "type": "VARCHAR",
-            "description": "ZIP code."
+            "description": "ZIP code"
         },
         {
             "name": "S_COUNTRY",
             "type": "VARCHAR",
-            "description": "Country."
+            "description": "Country"
         },
         {
-            "name": "S_GMT_OFFSET",
-            "type": "FLOAT",
-            "description": "GMT offset for store timezone."
-        },
-        {
-            "name": "S_TAX_PRECENTAGE",
-            "type": "FLOAT",
-            "description": "Sales tax rate as decimal (e.g. 0.08 = 8%). Note: column name has a typo — 'PRECENTAGE'."
+            "name": "S_CLOSED_DATE_SK",
+            "type": "INT",
+            "description": "FK to DATE_DIM — NULL means open"
         }
     ]
 }

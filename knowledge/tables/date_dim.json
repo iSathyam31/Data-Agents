@@ -1,169 +1,80 @@
 {
     "table_name": "DATE_DIM",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.DATE_DIM",
-    "table_description": "Date dimension table containing one row per calendar day. Covers the full TPC-DS date range (~73,000 rows spanning ~200 years, of which ~5 years contain sales data). This is the most frequently joined dimension — every sales fact table has a date SK column. Provides rich time attributes for slicing by year, quarter, month, week, day-of-week, holiday, and fiscal periods.",
+    "table_description": "Date dimension. Contains one row per calendar date with extensive date attributes. CRITICAL join table for all fact tables.",
     "use_cases": [
-        "Filtering sales by year, quarter, or month",
-        "Year-over-year and month-over-month comparisons",
-        "Holiday and weekend sales analysis",
-        "Fiscal year reporting (D_FY_YEAR)",
-        "Day-of-week sales patterns",
-        "Same-day-last-year comparison using D_SAME_DAY_LY"
+        "Time-based filtering and aggregation",
+        "Year-over-year comparisons",
+        "Fiscal period analysis",
+        "Holiday/weekend analysis"
     ],
     "data_quality_notes": [
-        "D_DATE_SK is the integer surrogate key used in all fact table joins (SS_SOLD_DATE_SK, CS_SOLD_DATE_SK, WS_SOLD_DATE_SK, etc.).",
-        "D_DATE is the actual calendar date as a string 'YYYY-MM-DD'.",
-        "D_YEAR contains the 4-digit calendar year — use this for year filtering instead of extracting from D_DATE.",
-        "D_MOY is month-of-year (1=January through 12=December).",
-        "D_QOY is quarter-of-year (1-4).",
-        "D_DOW is day-of-week: 0=Sunday through 6=Saturday.",
-        "D_HOLIDAY is 'Y' or 'N' — not a boolean.",
-        "D_WEEKEND is 'Y' or 'N' — not a boolean.",
-        "D_CURRENT_YEAR is 'Y' or 'N' — marks the current year in the dataset.",
-        "D_SAME_DAY_LY and D_SAME_DAY_LQ are SKs pointing to the equivalent day last year/last quarter — use for same-period comparisons without complex date math.",
-        "TPC-DS sales data covers years 1998-2002 approximately — filter on D_YEAR between 1998 and 2002 for valid data."
+        "D_DATE_SK is the surrogate key — ALL fact tables join here on *_DATE_SK columns",
+        "D_DATE is the actual DATE value — use this for date arithmetic",
+        "D_YEAR, D_MOY (month of year), D_DOM (day of month) for grouping",
+        "D_QOY = quarter of year (1-4)",
+        "D_FY_YEAR, D_FY_QUARTER_SEQ for fiscal year analysis",
+        "Always use DATE_DIM joins instead of date arithmetic on surrogate keys"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "D_DATE_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Join to fact tables on their _DATE_SK columns."
-        },
-        {
-            "name": "D_DATE_ID",
-            "type": "VARCHAR",
-            "description": "Business key for the date."
+            "type": "INT",
+            "description": "Surrogate PK — join target for all fact tables"
         },
         {
             "name": "D_DATE",
             "type": "DATE",
-            "description": "Actual calendar date."
+            "description": "Actual calendar date"
         },
         {
-            "name": "D_MONTH_SEQ",
-            "type": "NUMBER",
-            "description": "Sequential month number across the dataset timeline. Useful for month-over-month trending."
-        },
-        {
-            "name": "D_WEEK_SEQ",
-            "type": "NUMBER",
-            "description": "Sequential week number."
-        },
-        {
-            "name": "D_QUARTER_SEQ",
-            "type": "NUMBER",
-            "description": "Sequential quarter number."
+            "name": "D_DATE_ID",
+            "type": "VARCHAR",
+            "description": "Business key"
         },
         {
             "name": "D_YEAR",
-            "type": "NUMBER",
-            "description": "Calendar year (4-digit). TPC-DS data is in years ~1998-2002. Filter here for year-level queries."
-        },
-        {
-            "name": "D_DOW",
-            "type": "NUMBER",
-            "description": "Day of week: 0=Sunday, 1=Monday ... 6=Saturday."
+            "type": "INT",
+            "description": "Calendar year (e.g. 2001)"
         },
         {
             "name": "D_MOY",
-            "type": "NUMBER",
-            "description": "Month of year: 1=January through 12=December."
+            "type": "INT",
+            "description": "Month of year (1-12)"
         },
         {
             "name": "D_DOM",
-            "type": "NUMBER",
-            "description": "Day of month (1-31)."
+            "type": "INT",
+            "description": "Day of month (1-31)"
         },
         {
             "name": "D_QOY",
-            "type": "NUMBER",
-            "description": "Quarter of year (1-4)."
+            "type": "INT",
+            "description": "Quarter of year (1-4)"
+        },
+        {
+            "name": "D_DOW",
+            "type": "INT",
+            "description": "Day of week"
+        },
+        {
+            "name": "D_MONTH_SEQ",
+            "type": "INT",
+            "description": "Sequential month number"
+        },
+        {
+            "name": "D_WEEK_SEQ",
+            "type": "INT",
+            "description": "Sequential week number"
         },
         {
             "name": "D_FY_YEAR",
-            "type": "NUMBER",
-            "description": "Fiscal year number."
-        },
-        {
-            "name": "D_FY_QUARTER_SEQ",
-            "type": "NUMBER",
-            "description": "Sequential fiscal quarter."
-        },
-        {
-            "name": "D_FY_WEEK_SEQ",
-            "type": "NUMBER",
-            "description": "Sequential fiscal week."
-        },
-        {
-            "name": "D_DAY_NAME",
-            "type": "VARCHAR",
-            "description": "Full name of the day: 'Monday', 'Tuesday', etc."
-        },
-        {
-            "name": "D_QUARTER_NAME",
-            "type": "VARCHAR",
-            "description": "Quarter name like '1998Q1'."
+            "type": "INT",
+            "description": "Fiscal year"
         },
         {
             "name": "D_HOLIDAY",
             "type": "VARCHAR",
-            "description": "'Y' if this date is a US federal holiday, 'N' otherwise. Not a boolean."
-        },
-        {
-            "name": "D_WEEKEND",
-            "type": "VARCHAR",
-            "description": "'Y' if Saturday or Sunday, 'N' otherwise. Not a boolean."
-        },
-        {
-            "name": "D_FOLLOWING_HOLIDAY",
-            "type": "VARCHAR",
-            "description": "'Y' if the day immediately precedes a holiday."
-        },
-        {
-            "name": "D_FIRST_DOM",
-            "type": "NUMBER",
-            "description": "DATE_SK of the first day of this month."
-        },
-        {
-            "name": "D_LAST_DOM",
-            "type": "NUMBER",
-            "description": "DATE_SK of the last day of this month."
-        },
-        {
-            "name": "D_SAME_DAY_LY",
-            "type": "NUMBER",
-            "description": "DATE_SK of the same calendar day last year. Use for YoY comparisons without date math."
-        },
-        {
-            "name": "D_SAME_DAY_LQ",
-            "type": "NUMBER",
-            "description": "DATE_SK of the same day last quarter. Use for QoQ comparisons."
-        },
-        {
-            "name": "D_CURRENT_DAY",
-            "type": "VARCHAR",
-            "description": "'Y' if this is the current day in the dataset."
-        },
-        {
-            "name": "D_CURRENT_WEEK",
-            "type": "VARCHAR",
-            "description": "'Y' if this date is in the current week."
-        },
-        {
-            "name": "D_CURRENT_MONTH",
-            "type": "VARCHAR",
-            "description": "'Y' if this date is in the current month."
-        },
-        {
-            "name": "D_CURRENT_QUARTER",
-            "type": "VARCHAR",
-            "description": "'Y' if this date is in the current quarter."
-        },
-        {
-            "name": "D_CURRENT_YEAR",
-            "type": "VARCHAR",
-            "description": "'Y' if this date is in the current year."
+            "description": "Y/N is holiday"
         }
     ]
 }

@@ -1,0 +1,87 @@
+{
+    "title": "Snowflake SQL Best Practices for Petabyte-Scale Queries",
+    "description": "Critical optimization rules for generating efficient SQL on Snowflake's micro-partition architecture",
+    "category": "best_practices",
+    "sections": [
+        {
+            "topic": "Partition Pruning (Most Critical Optimization)",
+            "rules": [
+                "Snowflake stores data in compressed, columnar, immutable micro-partitions (~16MB each)",
+                "Every query tries to SKIP unnecessary partitions using metadata (min/max values per partition)",
+                "Your #1 goal: maximize partition pruning = minimize scanned data = minimize cost",
+                "NEVER apply functions to filter columns (e.g., YEAR(sale_date) = 2026) — this prevents pruning",
+                "USE range predicates instead: sale_date BETWEEN '2026-01-01' AND '2026-12-31'",
+                "Pre-filter dimension tables in CTEs, then join the small result to fact tables — this enables the optimizer to prune fact-table partitions via join keys"
+            ]
+        },
+        {
+            "topic": "Minimize Scanned Bytes (Columnar Storage)",
+            "rules": [
+                "Snowflake is columnar — only queried columns are decompressed and scanned",
+                "NEVER use SELECT * — each extra column increases bytes scanned and cost",
+                "Only select columns you actually need for the answer",
+                "At PB scale, an unnecessary column can add terabytes of scanning"
+            ]
+        },
+        {
+            "topic": "CTE Pattern for Efficient Joins",
+            "rules": [
+                "AGGREGATE fact tables by surrogate keys FIRST, THEN join to dimensions for labels",
+                "Filter BEFORE joining — reduce row counts in CTEs before any JOIN",
+                "Bad: SELECT dim.name, SUM(fact.amount) FROM fact JOIN dim GROUP BY dim.name",
+                "Good: WITH agg AS (SELECT fk, SUM(amount) FROM fact GROUP BY fk) SELECT dim.name, agg.total FROM agg JOIN dim ON ...",
+                "This pattern reduces shuffle, prevents spilling, and enables better parallelism"
+            ]
+        },
+        {
+            "topic": "Avoid Spilling (Memory Overflow)",
+            "rules": [
+                "When query memory exceeds warehouse memory, Snowflake spills to local disk then remote storage",
+                "Spilling DESTROYS performance — queries can be 10-100x slower",
+                "Solutions: pre-aggregate in CTEs, filter early, reduce join cardinality",
+                "Check Query Profile for 'Bytes Spilled to Local/Remote Storage'",
+                "Large JOINs on unfiltered fact tables are the #1 cause of spilling"
+            ]
+        },
+        {
+            "topic": "Snowflake-Specific SQL Features",
+            "rules": [
+                "Use QUALIFY instead of nested subqueries for window-function filters: SELECT ... QUALIFY ROW_NUMBER() OVER (...) <= 10",
+                "Use NULLIF() to prevent division-by-zero in rate calculations",
+                "Use IFF() or CASE for conditional aggregation instead of multiple scans",
+                "Use APPROX_COUNT_DISTINCT() when exact distinct counts are not required — much faster at scale",
+                "Use :: for casting (e.g., column::DATE) which is cleaner and idiomatic Snowflake"
+            ]
+        },
+        {
+            "topic": "Avoid Anti-Patterns",
+            "rules": [
+                "NEVER use correlated subqueries against fact tables — resolve values in a CTE first",
+                "AVOID COUNT(DISTINCT surrogate_key) on billions of rows — use COUNT(*) after GROUP BY",
+                "NEVER query a fact table without a date filter — it will scan ALL partitions",
+                "AVOID repeated CTE references that cause recomputation — split into sequential CTEs",
+                "AVOID UNION when UNION ALL suffices — UNION forces a sort/distinct operation",
+                "AVOID ORDER BY on large intermediate results — only ORDER on final output"
+            ]
+        },
+        {
+            "topic": "Join Optimization",
+            "rules": [
+                "Snowflake distributes data across nodes — large joins trigger repartitioning and network transfer",
+                "Always filter BOTH sides of a join as much as possible before the join",
+                "Put the smaller table/CTE as the build side (Snowflake usually auto-detects this)",
+                "For SCD Type 2 dimensions, always filter REC_END_DATE IS NULL to get current version only",
+                "Check for NULL foreign keys before joining (e.g., SS_CUSTOMER_SK IS NOT NULL)"
+            ]
+        },
+        {
+            "topic": "Result Cache Awareness",
+            "rules": [
+                "Snowflake caches results — identical queries return instantly if data hasn't changed",
+                "Cache invalidates if: underlying data changes, query text changes, or 24 hours pass",
+                "Deterministic queries on stable tables benefit most from caching",
+                "Do not add unnecessary randomness (e.g., CURRENT_TIMESTAMP) if not needed"
+            ]
+        }
+    ]
+}

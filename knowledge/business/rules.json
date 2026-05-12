@@ -1,0 +1,81 @@
+{
+    "domain": "Retail Decision Support (Multi-Channel)",
+    "description": "Retail company with 3 sales channels (store, catalog, web). Data includes customers, items, transactions, returns, inventory, and promotions.",
+    "metrics": [
+        {
+            "name": "Total Revenue",
+            "definition": "Sum of extended sales price across transactions",
+            "calculation": "SUM(*_EXT_SALES_PRICE) from the relevant sales fact table",
+            "notes": "Use SS_EXT_SALES_PRICE for store, CS_EXT_SALES_PRICE for catalog, WS_EXT_SALES_PRICE for web"
+        },
+        {
+            "name": "Net Profit",
+            "definition": "Revenue minus all costs (wholesale, tax, shipping, etc.)",
+            "calculation": "SUM(*_NET_PROFIT) from the relevant sales fact table",
+            "notes": "Can be NEGATIVE — this is expected for loss-making transactions"
+        },
+        {
+            "name": "Return Rate",
+            "definition": "Percentage of sold items that were returned",
+            "calculation": "COUNT(returns) / COUNT(sales) for matching ticket/order numbers",
+            "notes": "Must join returns back to sales on (TICKET_NUMBER + ITEM_SK) or (ORDER_NUMBER + ITEM_SK)"
+        },
+        {
+            "name": "Average Transaction Value",
+            "definition": "Average revenue per transaction/receipt",
+            "calculation": "SUM(EXT_SALES_PRICE) / COUNT(DISTINCT TICKET_NUMBER or ORDER_NUMBER)",
+            "notes": "Use TICKET_NUMBER for store, ORDER_NUMBER for catalog and web"
+        },
+        {
+            "name": "Customer Count",
+            "definition": "Unique customers who made purchases",
+            "calculation": "COUNT(DISTINCT *_CUSTOMER_SK) where *_CUSTOMER_SK IS NOT NULL",
+            "notes": "CUSTOMER_SK can be NULL for anonymous/cash transactions in store sales"
+        }
+    ],
+    "common_gotchas": [
+        {
+            "issue": "NULL customer keys in STORE_SALES",
+            "solution": "SS_CUSTOMER_SK can be NULL (anonymous transactions). Always add SS_CUSTOMER_SK IS NOT NULL when counting or joining customers."
+        },
+        {
+            "issue": "SCD Type 2 in ITEM dimension",
+            "solution": "ITEM has multiple rows per product (I_REC_START_DATE / I_REC_END_DATE). Filter I_REC_END_DATE IS NULL for current version, or join carefully on the date range."
+        },
+        {
+            "issue": "Surrogate keys are NOT dates",
+            "solution": "SS_SOLD_DATE_SK is an INTEGER foreign key, not a date. Always JOIN to DATE_DIM on D_DATE_SK to get actual dates. Never do arithmetic on surrogate keys."
+        },
+        {
+            "issue": "Different customer keys for billing vs shipping",
+            "solution": "CATALOG_SALES and WEB_SALES have both *_BILL_CUSTOMER_SK and *_SHIP_CUSTOMER_SK. They can differ (gift orders). Use BILL for revenue attribution, SHIP for logistics."
+        },
+        {
+            "issue": "Fact tables can be extremely large (billions to trillions of rows)",
+            "solution": "ALWAYS filter by date using a CTE on DATE_DIM first (WHERE D_YEAR = ...), then join to the fact table. Never do full table scans. Always include LIMIT."
+        },
+        {
+            "issue": "Returns link to sales",
+            "solution": "STORE_RETURNS links via SR_TICKET_NUMBER + SR_ITEM_SK. CATALOG_RETURNS via CR_ORDER_NUMBER + CR_ITEM_SK. WEB_RETURNS via WR_ORDER_NUMBER + WR_ITEM_SK."
+        },
+        {
+            "issue": "Fully qualified table names required",
+            "solution": "Always use DATABASE.SCHEMA.TABLE_NAME for all table references to avoid ambiguity."
+        },
+        {
+            "issue": "Performance at scale — use CTEs",
+            "solution": "At petabyte scale, always pre-filter dimension tables in CTEs before joining to fact tables. Aggregate fact tables by surrogate keys first, then join to dimensions for human-readable labels. Avoid COUNT(DISTINCT) on large surrogate keys — use COUNT(*) after GROUP BY instead."
+        }
+    ],
+    "join_patterns": {
+        "sales_to_date": "Use CTE: WITH date_filter AS (SELECT D_DATE_SK FROM DATE_DIM WHERE D_YEAR = ...) then INNER JOIN date_filter ON <fact>.*_SOLD_DATE_SK = date_filter.D_DATE_SK",
+        "sales_to_item": "INNER JOIN ITEM i ON <fact>.*_ITEM_SK = i.I_ITEM_SK (filter I_REC_END_DATE IS NULL for current version)",
+        "sales_to_customer": "INNER JOIN CUSTOMER c ON <fact>.*_CUSTOMER_SK = c.C_CUSTOMER_SK (ensure *_CUSTOMER_SK IS NOT NULL)",
+        "sales_to_store": "INNER JOIN STORE s ON ss.SS_STORE_SK = s.S_STORE_SK",
+        "customer_to_address": "INNER JOIN CUSTOMER_ADDRESS ca ON c.C_CURRENT_ADDR_SK = ca.CA_ADDRESS_SK",
+        "customer_to_demographics": "INNER JOIN CUSTOMER_DEMOGRAPHICS cd ON c.C_CURRENT_CDEMO_SK = cd.CD_DEMO_SK",
+        "returns_to_sales_store": "INNER JOIN STORE_SALES ss ON sr.SR_TICKET_NUMBER = ss.SS_TICKET_NUMBER AND sr.SR_ITEM_SK = ss.SS_ITEM_SK",
+        "returns_to_sales_catalog": "INNER JOIN CATALOG_SALES cs ON cr.CR_ORDER_NUMBER = cs.CS_ORDER_NUMBER AND cr.CR_ITEM_SK = cs.CS_ITEM_SK",
+        "returns_to_sales_web": "INNER JOIN WEB_SALES ws ON wr.WR_ORDER_NUMBER = ws.WS_ORDER_NUMBER AND wr.WR_ITEM_SK = ws.WS_ITEM_SK"
+    }
+}

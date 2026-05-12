@@ -1,33 +1,29 @@
 {
     "table_name": "INCOME_BAND",
-    "schema": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL",
-    "full_reference": "SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL.INCOME_BAND",
-    "table_description": "Tiny lookup table (20 rows) defining annual household income ranges. Each row is an income band with a lower and upper bound in dollars. Referenced by HOUSEHOLD_DEMOGRAPHICS.HD_INCOME_BAND_SK. Use when you need actual dollar ranges rather than just the HD_BUY_POTENTIAL bucket.",
+    "table_description": "Income band dimension. Defines income ranges for household demographics.",
     "use_cases": [
-        "Revenue segmentation by customer income level",
-        "High-income vs low-income customer purchase patterns",
-        "Income band profitability analysis"
+        "Income-based segmentation"
     ],
     "data_quality_notes": [
-        "IB_LOWER_BOUND and IB_UPPER_BOUND are annual income in US dollars.",
-        "To get income band for customers: JOIN CUSTOMER -> HOUSEHOLD_DEMOGRAPHICS -> INCOME_BAND.",
-        "This table has only 20 rows — very safe to join."
+        "IB_INCOME_BAND_SK is the surrogate key",
+        "Tiny dimension (~20 rows)",
+        "Join from HOUSEHOLD_DEMOGRAPHICS via HD_INCOME_BAND_SK"
     ],
-    "table_columns": [
+    "key_columns": [
         {
             "name": "IB_INCOME_BAND_SK",
-            "type": "NUMBER",
-            "description": "Surrogate primary key. Referenced by HOUSEHOLD_DEMOGRAPHICS.HD_INCOME_BAND_SK."
+            "type": "INT",
+            "description": "Surrogate PK"
         },
         {
             "name": "IB_LOWER_BOUND",
-            "type": "NUMBER",
-            "description": "Lower bound of annual household income in USD."
+            "type": "INT",
+            "description": "Lower income bound"
         },
         {
             "name": "IB_UPPER_BOUND",
-            "type": "NUMBER",
-            "description": "Upper bound of annual household income in USD."
+            "type": "INT",
+            "description": "Upper income bound"
         }
     ]
 }
