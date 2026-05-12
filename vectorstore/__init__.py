@@ -1,79 +1,89 @@
-"""ChromaDB vector store for knowledge and learnings — uses Azure OpenAI embeddings."""
+"""Qdrant vector store for knowledge and learnings — uses Azure OpenAI embeddings."""
 
-import chromadb
-from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from langchain_openai import AzureOpenAIEmbeddings
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
 import config
+import uuid
 
 # ── Singletons ────────────────────────────────────────────────────
 _client = None
-_embedding_fn = None
-_knowledge_collection = None
-_learnings_collection = None
+_embeddings = None
+NAMESPACE_QDRANT = uuid.UUID("12345678-1234-5678-1234-567812345678")
 
 
-def _get_embedding_fn() -> OpenAIEmbeddingFunction:
-    """Create Azure OpenAI-compatible embedding function for ChromaDB (cached)."""
-    global _embedding_fn
-    if _embedding_fn is None:
-        _embedding_fn = OpenAIEmbeddingFunction(
+def _get_uuid(text_id: str) -> str:
+    """Generate a deterministic UUID from a string ID for Qdrant."""
+    return str(uuid.uuid5(NAMESPACE_QDRANT, text_id))
+
+
+def _get_embeddings() -> AzureOpenAIEmbeddings:
+    """Create Azure OpenAI embeddings generator (cached)."""
+    global _embeddings
+    if _embeddings is None:
+        _embeddings = AzureOpenAIEmbeddings(
             api_key=config.AZURE_OPENAI_API_KEY,
-            api_base=config.AZURE_OPENAI_ENDPOINT,
-            api_type="azure",
+            azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
+            azure_deployment=config.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
             api_version=config.AZURE_OPENAI_API_VERSION,
-            model_name=config.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
-            deployment_id=config.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
         )
-    return _embedding_fn
+    return _embeddings
 
 
-def get_client() -> chromadb.ClientAPI:
-    """Get persistent ChromaDB client (singleton)."""
+def get_client() -> QdrantClient:
+    """Get persistent Qdrant client (singleton)."""
     global _client
     if _client is None:
-        _client = chromadb.PersistentClient(path=config.CHROMA_PERSIST_DIR)
+        if config.QDRANT_URL and config.QDRANT_API_KEY:
+            _client = QdrantClient(url=config.QDRANT_URL, api_key=config.QDRANT_API_KEY)
+        else:
+            # Fallback to local memory if not configured (for dev)
+            _client = QdrantClient(":memory:")
     return _client
 
 
-def get_knowledge_collection():
-    """Get or create the knowledge collection (cached)."""
-    global _knowledge_collection
-    if _knowledge_collection is None:
-        client = get_client()
-        _knowledge_collection = client.get_or_create_collection(
-            name="knowledge",
-            embedding_function=_get_embedding_fn(),
-            metadata={"hnsw:space": "cosine"},
+def _ensure_collection(name: str):
+    """Ensure the Qdrant collection exists with the correct vector size."""
+    client = get_client()
+    if not client.collection_exists(name):
+        client.create_collection(
+            collection_name=name,
+            vectors_config=VectorParams(size=1536, distance=Distance.COSINE),
         )
-    return _knowledge_collection
 
 
-def get_learnings_collection():
-    """Get or create the learnings collection (cached)."""
-    global _learnings_collection
-    if _learnings_collection is None:
-        client = get_client()
-        _learnings_collection = client.get_or_create_collection(
-            name="learnings",
-            embedding_function=_get_embedding_fn(),
-            metadata={"hnsw:space": "cosine"},
-        )
-    return _learnings_collection
+def clear_knowledge():
+    """Clear all documents in the knowledge collection."""
+    client = get_client()
+    if client.collection_exists("knowledge"):
+        client.delete_collection("knowledge")
+        _ensure_collection("knowledge")
 
 
 def search_knowledge(query: str, n_results: int | None = None) -> list[dict]:
     """Search knowledge base. Returns list of {id, document, metadata, distance}."""
     n = n_results or config.KNOWLEDGE_TOP_K
-    collection = get_knowledge_collection()
-    if collection.count() == 0:
+    _ensure_collection("knowledge")
+    client = get_client()
+    
+    # Qdrant raises an error if we try to search an empty in-memory collection
+    try:
+        query_vector = _get_embeddings().embed_query(query)
+        results = client.query_points(
+            collection_name="knowledge",
+            query=query_vector,
+            limit=n
+        ).points
+    except Exception:
         return []
-    results = collection.query(query_texts=[query], n_results=min(n, collection.count()))
+
     items = []
-    for i in range(len(results["ids"][0])):
+    for hit in results:
         items.append({
-            "id": results["ids"][0][i],
-            "document": results["documents"][0][i],
-            "metadata": results["metadatas"][0][i] if results["metadatas"] else {},
-            "distance": results["distances"][0][i] if results["distances"] else None,
+            "id": hit.payload.get("original_id", hit.id),
+            "document": hit.payload.get("document", ""),
+            "metadata": hit.payload.get("metadata", {}),
+            "distance": hit.score,
         })
     return items
 
@@ -81,36 +91,64 @@ def search_knowledge(query: str, n_results: int | None = None) -> list[dict]:
 def search_learnings(query: str, n_results: int | None = None) -> list[dict]:
     """Search learnings store. Returns list of {id, document, metadata, distance}."""
     n = n_results or config.LEARNINGS_TOP_K
-    collection = get_learnings_collection()
-    if collection.count() == 0:
+    _ensure_collection("learnings")
+    client = get_client()
+    
+    try:
+        query_vector = _get_embeddings().embed_query(query)
+        results = client.query_points(
+            collection_name="learnings",
+            query=query_vector,
+            limit=n
+        ).points
+    except Exception:
         return []
-    results = collection.query(query_texts=[query], n_results=min(n, collection.count()))
+
     items = []
-    for i in range(len(results["ids"][0])):
+    for hit in results:
         items.append({
-            "id": results["ids"][0][i],
-            "document": results["documents"][0][i],
-            "metadata": results["metadatas"][0][i] if results["metadatas"] else {},
-            "distance": results["distances"][0][i] if results["distances"] else None,
+            "id": hit.payload.get("original_id", hit.id),
+            "document": hit.payload.get("document", ""),
+            "metadata": hit.payload.get("metadata", {}),
+            "distance": hit.score,
         })
     return items
 
 
 def save_learning(learning_id: str, text: str, metadata: dict | None = None):
     """Save a learning to the learnings collection."""
-    collection = get_learnings_collection()
-    collection.upsert(
-        ids=[learning_id],
-        documents=[text],
-        metadatas=[metadata or {}],
+    _ensure_collection("learnings")
+    vector = _get_embeddings().embed_query(text)
+    
+    payload = {"document": text, "metadata": metadata or {}, "original_id": learning_id}
+    
+    get_client().upsert(
+        collection_name="learnings",
+        points=[
+            PointStruct(
+                id=_get_uuid(learning_id),
+                vector=vector,
+                payload=payload
+            )
+        ]
     )
 
 
 def upsert_knowledge(doc_id: str, text: str, metadata: dict | None = None):
     """Upsert a knowledge document."""
-    collection = get_knowledge_collection()
-    collection.upsert(
-        ids=[doc_id],
-        documents=[text],
-        metadatas=[metadata or {}],
+    _ensure_collection("knowledge")
+    vector = _get_embeddings().embed_query(text)
+    
+    payload = {"document": text, "metadata": metadata or {}, "original_id": doc_id}
+    
+    get_client().upsert(
+        collection_name="knowledge",
+        points=[
+            PointStruct(
+                id=_get_uuid(doc_id),
+                vector=vector,
+                payload=payload
+            )
+        ]
     )
+

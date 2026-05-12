@@ -28,6 +28,7 @@ COST_BYTES_THRESHOLD = 10 * (1024 ** 3)   # 10 GB — ask user before scanning m
 MAX_SQL_RETRIES = 3             # Analyst retry budget on SQL errors
 
 # ── Vector Store ──────────────────────────────────────────────────────────────
-CHROMA_PERSIST_DIR = os.path.join(os.path.dirname(__file__), ".chroma_db")
+QDRANT_URL = os.getenv("QDRANT_URL", "")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "")
 KNOWLEDGE_TOP_K = 5
 LEARNINGS_TOP_K = 3

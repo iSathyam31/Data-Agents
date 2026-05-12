@@ -7,7 +7,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from vectorstore import upsert_knowledge, get_knowledge_collection
+from vectorstore import upsert_knowledge, clear_knowledge
 
 
 KNOWLEDGE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "knowledge")
@@ -150,11 +150,7 @@ def main(recreate: bool = False):
     """Main entry point for loading knowledge."""
     if recreate:
         print("Recreating knowledge collection...")
-        collection = get_knowledge_collection()
-        # Delete all existing documents
-        existing = collection.get()
-        if existing["ids"]:
-            collection.delete(ids=existing["ids"])
+        clear_knowledge()
         print("  Cleared existing knowledge.\n")
 
     print("Loading table knowledge...")
