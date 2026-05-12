@@ -1,29 +1,15 @@
-# Strands Agents
-strands-agents[openai]==1.38.0
-strands-agents-tools==0.5.2
-
-# UI
-streamlit==1.57.0
-
-# Backend API
+langchain-core
+langchain-community
+langchain-openai
+langgraph
+snowflake-sqlalchemy
+snowflake-connector-python
+chromadb
+streamlit
+python-dotenv
+sqlparse
+pandas
+sqlparse             
+plotly
 fastapi
 uvicorn[standard]
-pydantic
-
-# Database
-sqlalchemy==2.0.49
-snowflake-sqlalchemy==1.9.0
-snowflake-connector-python==4.4.0
-
-# Vector store
-chromadb==1.5.8
-
-# Azure OpenAI
-openai==2.33.0
-
-# Utilities
-python-dotenv==1.2.2
-pandas==3.0.2
-
-# Visualization
-plotly==6.7.0

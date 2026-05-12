@@ -1,0 +1,22 @@
+[project]
+name = "data-agents"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "chromadb>=1.5.9",
+    "fastapi>=0.136.1",
+    "langchain-community>=0.4.1",
+    "langchain-core>=1.4.0",
+    "langchain-openai>=1.2.1",
+    "langgraph>=1.2.0",
+    "pandas>=3.0.3",
+    "plotly>=6.7.0",
+    "python-dotenv>=1.2.2",
+    "snowflake-connector-python>=4.5.0",
+    "snowflake-sqlalchemy>=1.9.0",
+    "sqlparse>=0.5.5",
+    "streamlit>=1.57.0",
+    "uvicorn[standard]>=0.46.0",
+]

@@ -1,0 +1,2744 @@
+{
+  "CALL_CENTER": {
+    "table_name": "CALL_CENTER",
+    "table_type": "BASE TABLE",
+    "row_count": 60,
+    "bytes": 18944,
+    "columns": [
+      {
+        "name": "CC_CALL_CENTER_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "CC_CALL_CENTER_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "CC_REC_START_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "CC_REC_END_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CC_CLOSED_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CC_OPEN_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CC_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CC_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CC_EMPLOYEES",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "CC_SQ_FT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "CC_HOURS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "CC_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "CC_MKT_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "CC_MKT_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "CC_MKT_DESC",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "CC_MARKET_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "CC_DIVISION",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "CC_DIVISION_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "CC_COMPANY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "CC_COMPANY_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "CC_STREET_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "CC_STREET_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "CC_STREET_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "CC_SUITE_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "CC_CITY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "CC_COUNTY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "CC_STATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 27
+      },
+      {
+        "name": "CC_ZIP",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 28
+      },
+      {
+        "name": "CC_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 29
+      },
+      {
+        "name": "CC_GMT_OFFSET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 30
+      },
+      {
+        "name": "CC_TAX_PERCENTAGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 31
+      }
+    ]
+  },
+  "CATALOG_PAGE": {
+    "table_name": "CATALOG_PAGE",
+    "table_type": "BASE TABLE",
+    "row_count": 50000,
+    "bytes": 2794496,
+    "columns": [
+      {
+        "name": "CP_CATALOG_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "CP_CATALOG_PAGE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "CP_START_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "CP_END_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CP_DEPARTMENT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CP_CATALOG_NUMBER",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CP_CATALOG_PAGE_NUMBER",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CP_DESCRIPTION",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CP_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      }
+    ]
+  },
+  "CATALOG_RETURNS": {
+    "table_name": "CATALOG_RETURNS",
+    "table_type": "BASE TABLE",
+    "row_count": 14405363575,
+    "bytes": 827709382656,
+    "columns": [
+      {
+        "name": "CR_RETURNED_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "CR_RETURNED_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "CR_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 3
+      },
+      {
+        "name": "CR_REFUNDED_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CR_REFUNDED_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CR_REFUNDED_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CR_REFUNDED_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CR_RETURNING_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CR_RETURNING_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "CR_RETURNING_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "CR_RETURNING_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "CR_CALL_CENTER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "CR_CATALOG_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "CR_SHIP_MODE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "CR_WAREHOUSE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "CR_REASON_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "CR_ORDER_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 17
+      },
+      {
+        "name": "CR_RETURN_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "CR_RETURN_AMOUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "CR_RETURN_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "CR_RETURN_AMT_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "CR_FEE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "CR_RETURN_SHIP_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "CR_REFUNDED_CASH",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "CR_REVERSED_CHARGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "CR_STORE_CREDIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "CR_NET_LOSS",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 27
+      }
+    ]
+  },
+  "CATALOG_SALES": {
+    "table_name": "CATALOG_SALES",
+    "table_type": "BASE TABLE",
+    "row_count": 144006767158,
+    "bytes": 10152218613760,
+    "columns": [
+      {
+        "name": "CS_SOLD_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "CS_SOLD_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "CS_SHIP_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "CS_BILL_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CS_BILL_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CS_BILL_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CS_BILL_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CS_SHIP_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CS_SHIP_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "CS_SHIP_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "CS_SHIP_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "CS_CALL_CENTER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "CS_CATALOG_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "CS_SHIP_MODE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "CS_WAREHOUSE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "CS_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 16
+      },
+      {
+        "name": "CS_PROMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "CS_ORDER_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 18
+      },
+      {
+        "name": "CS_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "CS_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "CS_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "CS_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "CS_EXT_DISCOUNT_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "CS_EXT_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "CS_EXT_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "CS_EXT_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "CS_EXT_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 27
+      },
+      {
+        "name": "CS_COUPON_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 28
+      },
+      {
+        "name": "CS_EXT_SHIP_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 29
+      },
+      {
+        "name": "CS_NET_PAID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 30
+      },
+      {
+        "name": "CS_NET_PAID_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 31
+      },
+      {
+        "name": "CS_NET_PAID_INC_SHIP",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 32
+      },
+      {
+        "name": "CS_NET_PAID_INC_SHIP_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 33
+      },
+      {
+        "name": "CS_NET_PROFIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 34
+      }
+    ]
+  },
+  "CUSTOMER": {
+    "table_name": "CUSTOMER",
+    "table_type": "BASE TABLE",
+    "row_count": 100000000,
+    "bytes": 3602470912,
+    "columns": [
+      {
+        "name": "C_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "C_CUSTOMER_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "C_CURRENT_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "C_CURRENT_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "C_CURRENT_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "C_FIRST_SHIPTO_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "C_FIRST_SALES_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "C_SALUTATION",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "C_FIRST_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "C_LAST_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "C_PREFERRED_CUST_FLAG",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "C_BIRTH_DAY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "C_BIRTH_MONTH",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "C_BIRTH_YEAR",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "C_BIRTH_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "C_LOGIN",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "C_EMAIL_ADDRESS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "C_LAST_REVIEW_DATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      }
+    ]
+  },
+  "CUSTOMER_ADDRESS": {
+    "table_name": "CUSTOMER_ADDRESS",
+    "table_type": "BASE TABLE",
+    "row_count": 50000000,
+    "bytes": 1719176192,
+    "columns": [
+      {
+        "name": "CA_ADDRESS_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "CA_ADDRESS_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "CA_STREET_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "CA_STREET_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CA_STREET_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CA_SUITE_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CA_CITY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CA_COUNTY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CA_STATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "CA_ZIP",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "CA_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "CA_GMT_OFFSET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "CA_LOCATION_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      }
+    ]
+  },
+  "CUSTOMER_DEMOGRAPHICS": {
+    "table_name": "CUSTOMER_DEMOGRAPHICS",
+    "table_type": "BASE TABLE",
+    "row_count": 1920800,
+    "bytes": 9931264,
+    "columns": [
+      {
+        "name": "CD_DEMO_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "CD_GENDER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "CD_MARITAL_STATUS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "CD_EDUCATION_STATUS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "CD_PURCHASE_ESTIMATE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "CD_CREDIT_RATING",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "CD_DEP_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "CD_DEP_EMPLOYED_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "CD_DEP_COLLEGE_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      }
+    ]
+  },
+  "DATE_DIM": {
+    "table_name": "DATE_DIM",
+    "table_type": "BASE TABLE",
+    "row_count": 73049,
+    "bytes": 2138624,
+    "columns": [
+      {
+        "name": "D_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "D_DATE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "D_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "D_MONTH_SEQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "D_WEEK_SEQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "D_QUARTER_SEQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "D_YEAR",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "D_DOW",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "D_MOY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "D_DOM",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "D_QOY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "D_FY_YEAR",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "D_FY_QUARTER_SEQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "D_FY_WEEK_SEQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "D_DAY_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "D_QUARTER_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "D_HOLIDAY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "D_WEEKEND",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "D_FOLLOWING_HOLIDAY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "D_FIRST_DOM",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "D_LAST_DOM",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "D_SAME_DAY_LY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "D_SAME_DAY_LQ",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "D_CURRENT_DAY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "D_CURRENT_WEEK",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "D_CURRENT_MONTH",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "D_CURRENT_QUARTER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 27
+      },
+      {
+        "name": "D_CURRENT_YEAR",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 28
+      }
+    ]
+  },
+  "HOUSEHOLD_DEMOGRAPHICS": {
+    "table_name": "HOUSEHOLD_DEMOGRAPHICS",
+    "table_type": "BASE TABLE",
+    "row_count": 7200,
+    "bytes": 30720,
+    "columns": [
+      {
+        "name": "HD_DEMO_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "HD_INCOME_BAND_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "HD_BUY_POTENTIAL",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "HD_DEP_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "HD_VEHICLE_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      }
+    ]
+  },
+  "INCOME_BAND": {
+    "table_name": "INCOME_BAND",
+    "table_type": "BASE TABLE",
+    "row_count": 20,
+    "bytes": 1536,
+    "columns": [
+      {
+        "name": "IB_INCOME_BAND_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "IB_LOWER_BOUND",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "IB_UPPER_BOUND",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      }
+    ]
+  },
+  "INVENTORY": {
+    "table_name": "INVENTORY",
+    "table_type": "BASE TABLE",
+    "row_count": 1965337830,
+    "bytes": 7860790272,
+    "columns": [
+      {
+        "name": "INV_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "INV_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "INV_WAREHOUSE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 3
+      },
+      {
+        "name": "INV_QUANTITY_ON_HAND",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      }
+    ]
+  },
+  "ITEM": {
+    "table_name": "ITEM",
+    "table_type": "BASE TABLE",
+    "row_count": 502000,
+    "bytes": 33434112,
+    "columns": [
+      {
+        "name": "I_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "I_ITEM_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "I_REC_START_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "I_REC_END_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "I_ITEM_DESC",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "I_CURRENT_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "I_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "I_BRAND_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "I_BRAND",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "I_CLASS_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "I_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "I_CATEGORY_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "I_CATEGORY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "I_MANUFACT_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "I_MANUFACT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "I_SIZE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "I_FORMULATION",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "I_COLOR",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "I_UNITS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "I_CONTAINER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "I_MANAGER_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "I_PRODUCT_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 22
+      }
+    ]
+  },
+  "PROMOTION": {
+    "table_name": "PROMOTION",
+    "table_type": "BASE TABLE",
+    "row_count": 2500,
+    "bytes": 104448,
+    "columns": [
+      {
+        "name": "P_PROMO_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "P_PROMO_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "P_START_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "P_END_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "P_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "P_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "P_RESPONSE_TARGET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "P_PROMO_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "P_CHANNEL_DMAIL",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "P_CHANNEL_EMAIL",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "P_CHANNEL_CATALOG",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "P_CHANNEL_TV",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "P_CHANNEL_RADIO",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "P_CHANNEL_PRESS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "P_CHANNEL_EVENT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "P_CHANNEL_DEMO",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "P_CHANNEL_DETAILS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "P_PURPOSE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "P_DISCOUNT_ACTIVE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 19
+      }
+    ]
+  },
+  "REASON": {
+    "table_name": "REASON",
+    "table_type": "BASE TABLE",
+    "row_count": 75,
+    "bytes": 2560,
+    "columns": [
+      {
+        "name": "R_REASON_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "R_REASON_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "R_REASON_DESC",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      }
+    ]
+  },
+  "SHIP_MODE": {
+    "table_name": "SHIP_MODE",
+    "table_type": "BASE TABLE",
+    "row_count": 20,
+    "bytes": 3072,
+    "columns": [
+      {
+        "name": "SM_SHIP_MODE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "SM_SHIP_MODE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "SM_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "SM_CODE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "SM_CARRIER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "SM_CONTRACT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 6
+      }
+    ]
+  },
+  "STORE": {
+    "table_name": "STORE",
+    "table_type": "BASE TABLE",
+    "row_count": 1902,
+    "bytes": 170496,
+    "columns": [
+      {
+        "name": "S_STORE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "S_STORE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "S_REC_START_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "S_REC_END_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "S_CLOSED_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "S_STORE_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "S_NUMBER_EMPLOYEES",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "S_FLOOR_SPACE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "S_HOURS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "S_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "S_MARKET_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "S_GEOGRAPHY_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "S_MARKET_DESC",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "S_MARKET_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "S_DIVISION_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "S_DIVISION_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "S_COMPANY_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "S_COMPANY_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "S_STREET_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "S_STREET_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "S_STREET_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "S_SUITE_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "S_CITY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "S_COUNTY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "S_STATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "S_ZIP",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "S_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 27
+      },
+      {
+        "name": "S_GMT_OFFSET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 28
+      },
+      {
+        "name": "S_TAX_PRECENTAGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 29
+      }
+    ]
+  },
+  "STORE_RETURNS": {
+    "table_name": "STORE_RETURNS",
+    "table_type": "BASE TABLE",
+    "row_count": 28794603867,
+    "bytes": 1002743521792,
+    "columns": [
+      {
+        "name": "SR_RETURNED_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "SR_RETURN_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "SR_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 3
+      },
+      {
+        "name": "SR_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "SR_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "SR_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "SR_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "SR_STORE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "SR_REASON_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "SR_TICKET_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 10
+      },
+      {
+        "name": "SR_RETURN_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "SR_RETURN_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "SR_RETURN_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "SR_RETURN_AMT_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "SR_FEE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "SR_RETURN_SHIP_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "SR_REFUNDED_CASH",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "SR_REVERSED_CHARGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "SR_STORE_CREDIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "SR_NET_LOSS",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      }
+    ]
+  },
+  "STORE_SALES": {
+    "table_name": "STORE_SALES",
+    "table_type": "BASE TABLE",
+    "row_count": 288010550524,
+    "bytes": 11401692813824,
+    "columns": [
+      {
+        "name": "SS_SOLD_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "SS_SOLD_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "SS_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 3
+      },
+      {
+        "name": "SS_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "SS_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "SS_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "SS_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "SS_STORE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "SS_PROMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "SS_TICKET_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 10
+      },
+      {
+        "name": "SS_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "SS_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "SS_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "SS_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "SS_EXT_DISCOUNT_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "SS_EXT_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "SS_EXT_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "SS_EXT_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "SS_EXT_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "SS_COUPON_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "SS_NET_PAID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "SS_NET_PAID_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "SS_NET_PROFIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      }
+    ]
+  },
+  "TIME_DIM": {
+    "table_name": "TIME_DIM",
+    "table_type": "BASE TABLE",
+    "row_count": 86400,
+    "bytes": 1123840,
+    "columns": [
+      {
+        "name": "T_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "T_TIME_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "T_TIME",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "T_HOUR",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "T_MINUTE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "T_SECOND",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "T_AM_PM",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "T_SHIFT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "T_SUB_SHIFT",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "T_MEAL_TIME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      }
+    ]
+  },
+  "WAREHOUSE": {
+    "table_name": "WAREHOUSE",
+    "table_type": "BASE TABLE",
+    "row_count": 30,
+    "bytes": 7680,
+    "columns": [
+      {
+        "name": "W_WAREHOUSE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "W_WAREHOUSE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "W_WAREHOUSE_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "W_WAREHOUSE_SQ_FT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "W_STREET_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "W_STREET_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "W_STREET_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "W_SUITE_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "W_CITY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "W_COUNTY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "W_STATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "W_ZIP",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "W_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "W_GMT_OFFSET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      }
+    ]
+  },
+  "WEB_PAGE": {
+    "table_name": "WEB_PAGE",
+    "table_type": "BASE TABLE",
+    "row_count": 5004,
+    "bytes": 78848,
+    "columns": [
+      {
+        "name": "WP_WEB_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "WP_WEB_PAGE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "WP_REC_START_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "WP_REC_END_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "WP_CREATION_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "WP_ACCESS_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "WP_AUTOGEN_FLAG",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "WP_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "WP_URL",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "WP_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "WP_CHAR_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "WP_LINK_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "WP_IMAGE_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "WP_MAX_AD_COUNT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      }
+    ]
+  },
+  "WEB_RETURNS": {
+    "table_name": "WEB_RETURNS",
+    "table_type": "BASE TABLE",
+    "row_count": 7200334357,
+    "bytes": 379811339776,
+    "columns": [
+      {
+        "name": "WR_RETURNED_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "WR_RETURNED_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "WR_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 3
+      },
+      {
+        "name": "WR_REFUNDED_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "WR_REFUNDED_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "WR_REFUNDED_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "WR_REFUNDED_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "WR_RETURNING_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "WR_RETURNING_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "WR_RETURNING_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "WR_RETURNING_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "WR_WEB_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "WR_REASON_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "WR_ORDER_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 14
+      },
+      {
+        "name": "WR_RETURN_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "WR_RETURN_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "WR_RETURN_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "WR_RETURN_AMT_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "WR_FEE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "WR_RETURN_SHIP_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "WR_REFUNDED_CASH",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "WR_REVERSED_CHARGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "WR_ACCOUNT_CREDIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "WR_NET_LOSS",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 24
+      }
+    ]
+  },
+  "WEB_SALES": {
+    "table_name": "WEB_SALES",
+    "table_type": "BASE TABLE",
+    "row_count": 71997815522,
+    "bytes": 5181447891456,
+    "columns": [
+      {
+        "name": "WS_SOLD_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 1
+      },
+      {
+        "name": "WS_SOLD_TIME_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 2
+      },
+      {
+        "name": "WS_SHIP_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "WS_ITEM_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 4
+      },
+      {
+        "name": "WS_BILL_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "WS_BILL_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "WS_BILL_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "WS_BILL_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "WS_SHIP_CUSTOMER_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "WS_SHIP_CDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "WS_SHIP_HDEMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "WS_SHIP_ADDR_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "WS_WEB_PAGE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "WS_WEB_SITE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "WS_SHIP_MODE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "WS_WAREHOUSE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "WS_PROMO_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "WS_ORDER_NUMBER",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 18
+      },
+      {
+        "name": "WS_QUANTITY",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "WS_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "WS_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "WS_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "WS_EXT_DISCOUNT_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "WS_EXT_SALES_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "WS_EXT_WHOLESALE_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "WS_EXT_LIST_PRICE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 26
+      },
+      {
+        "name": "WS_EXT_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 27
+      },
+      {
+        "name": "WS_COUPON_AMT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 28
+      },
+      {
+        "name": "WS_EXT_SHIP_COST",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 29
+      },
+      {
+        "name": "WS_NET_PAID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 30
+      },
+      {
+        "name": "WS_NET_PAID_INC_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 31
+      },
+      {
+        "name": "WS_NET_PAID_INC_SHIP",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 32
+      },
+      {
+        "name": "WS_NET_PAID_INC_SHIP_TAX",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 33
+      },
+      {
+        "name": "WS_NET_PROFIT",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 34
+      }
+    ]
+  },
+  "WEB_SITE": {
+    "table_name": "WEB_SITE",
+    "table_type": "BASE TABLE",
+    "row_count": 96,
+    "bytes": 22528,
+    "columns": [
+      {
+        "name": "WEB_SITE_SK",
+        "type": "NUMBER",
+        "nullable": "NO",
+        "position": 1
+      },
+      {
+        "name": "WEB_SITE_ID",
+        "type": "TEXT",
+        "nullable": "NO",
+        "position": 2
+      },
+      {
+        "name": "WEB_REC_START_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 3
+      },
+      {
+        "name": "WEB_REC_END_DATE",
+        "type": "DATE",
+        "nullable": "YES",
+        "position": 4
+      },
+      {
+        "name": "WEB_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 5
+      },
+      {
+        "name": "WEB_OPEN_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 6
+      },
+      {
+        "name": "WEB_CLOSE_DATE_SK",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 7
+      },
+      {
+        "name": "WEB_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 8
+      },
+      {
+        "name": "WEB_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 9
+      },
+      {
+        "name": "WEB_MKT_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 10
+      },
+      {
+        "name": "WEB_MKT_CLASS",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 11
+      },
+      {
+        "name": "WEB_MKT_DESC",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 12
+      },
+      {
+        "name": "WEB_MARKET_MANAGER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 13
+      },
+      {
+        "name": "WEB_COMPANY_ID",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 14
+      },
+      {
+        "name": "WEB_COMPANY_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 15
+      },
+      {
+        "name": "WEB_STREET_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 16
+      },
+      {
+        "name": "WEB_STREET_NAME",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 17
+      },
+      {
+        "name": "WEB_STREET_TYPE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 18
+      },
+      {
+        "name": "WEB_SUITE_NUMBER",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 19
+      },
+      {
+        "name": "WEB_CITY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 20
+      },
+      {
+        "name": "WEB_COUNTY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 21
+      },
+      {
+        "name": "WEB_STATE",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 22
+      },
+      {
+        "name": "WEB_ZIP",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 23
+      },
+      {
+        "name": "WEB_COUNTRY",
+        "type": "TEXT",
+        "nullable": "YES",
+        "position": 24
+      },
+      {
+        "name": "WEB_GMT_OFFSET",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 25
+      },
+      {
+        "name": "WEB_TAX_PERCENTAGE",
+        "type": "NUMBER",
+        "nullable": "YES",
+        "position": 26
+      }
+    ]
+  }
+}

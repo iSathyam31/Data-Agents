@@ -3,6 +3,7 @@
 
 # ChromaDB persistence
 chroma_data/
+.chroma_db/
 
 # Python
 __pycache__/
