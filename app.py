@@ -552,6 +552,22 @@ with st.sidebar:
             load_kb(recreate=True)
         st.success("Knowledge reloaded!")
 
+# ── Node display names for live status ────────────────────────────────────────
+_NODE_STATUS = {
+    "intent_classifier": ("🧠", "Classifying intent..."),
+    "context_retrieval": ("🔍", "Retrieving knowledge and schema context..."),
+    "analyst": ("📝", "Generating SQL query..."),
+    "sql_validator": ("✅", "Validating SQL for safety..."),
+    "executor": ("⚡", "Executing query on Snowflake..."),
+    "interpreter": ("💡", "Interpreting results..."),
+    "learning_evaluator": ("📚", "Evaluating learnings..."),
+    "leader": ("🤖", "Composing response..."),
+    "engineer": ("🛠️", "Building database object..."),
+    "analyst_retry": ("🔄", "Retrying with error context..."),
+    "validation_failed": ("❌", "Validation failed"),
+    "execution_failed": ("❌", "Execution failed"),
+}
+
 # ── Main Chat Area ────────────────────────────────────────────────────────────
 
 # Suggested questions
@@ -590,39 +606,98 @@ else:
         with st.chat_message("user"):
             st.markdown(entry["user_msg"])
         with st.chat_message("assistant"):
-            st.markdown(entry["response"])
-            if entry.get("sql"):
-                with st.expander("🔍 SQL Query", expanded=False):
-                    st.code(entry["sql"], language="sql")
-            # Render chart if available
-            if entry.get("chart_config") and entry.get("rows"):
-                fig = render_chart(entry["chart_config"], entry["rows"], palette_idx=idx)
-                if fig:
-                    _display_chart_glass(fig)
-            if entry.get("rows"):
-                with st.expander(f"📋 Raw Results ({entry['row_count']} rows)", expanded=False):
-                    df = pd.DataFrame(entry["rows"])
-                    st.dataframe(df, width="stretch")
-            if entry.get("warnings"):
-                with st.expander("⚠️ Warnings", expanded=False):
-                    for w in entry["warnings"]:
-                        st.warning(w)
+            if entry.get("pending"):
+                status_container = st.empty()
+                accumulated = {}
+                try:
+                    initial_state = {
+                        "messages": [HumanMessage(content=entry["user_msg"])],
+                        "intent": "",
+                        "current_agent": "",
+                        "knowledge_context": [],
+                        "learnings_context": [],
+                        "schema_context": "",
+                        "generated_sql": "",
+                        "validation_result": {},
+                        "cost_estimate": {},
+                        "sql_result": None,
+                        "sql_error": None,
+                        "insight": "",
+                        "chart_config": None,
+                        "retry_count": 0,
+                        "learning_candidate": None,
+                        "session_id": st.session_state.session_id,
+                    }
 
-# ── Node display names for live status ────────────────────────────────────────
-_NODE_STATUS = {
-    "intent_classifier": ("🧠", "Classifying intent..."),
-    "context_retrieval": ("🔍", "Retrieving knowledge and schema context..."),
-    "analyst": ("📝", "Generating SQL query..."),
-    "sql_validator": ("✅", "Validating SQL for safety..."),
-    "executor": ("⚡", "Executing query on Snowflake..."),
-    "interpreter": ("💡", "Interpreting results..."),
-    "learning_evaluator": ("📚", "Evaluating learnings..."),
-    "leader": ("🤖", "Composing response..."),
-    "engineer": ("🛠️", "Building database object..."),
-    "analyst_retry": ("🔄", "Retrying with error context..."),
-    "validation_failed": ("❌", "Validation failed"),
-    "execution_failed": ("❌", "Execution failed"),
-}
+                    # Stream node-by-node for live status updates
+                    for event in st.session_state.graph.stream(initial_state):
+                        for node_name, node_output in event.items():
+                            icon, label = _NODE_STATUS.get(node_name, ("⏳", f"Running {node_name}..."))
+                            status_container.markdown(
+                                f'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;">'
+                                f'<span style="font-size:1.2rem;">{icon}</span>'
+                                f'<span style="color:#94a3b8;font-size:0.95rem;">{label}</span>'
+                                f'<span class="pulse-dot"></span>'
+                                f'</div>',
+                                unsafe_allow_html=True,
+                            )
+                            if isinstance(node_output, dict):
+                                accumulated.update(node_output)
+
+                    status_container.empty()
+                    response_text = accumulated.get("insight", "I couldn't generate a response.")
+                    chart_config = accumulated.get("chart_config")
+                    generated_sql = accumulated.get("generated_sql", "")
+                    sql_result = accumulated.get("sql_result")
+                    validation = accumulated.get("validation_result", {})
+                    warn_list = validation.get("warnings", [])
+
+                    if generated_sql and sql_result and sql_result.get("rows"):
+                        st.session_state.sql_history.append({
+                            "sql": generated_sql,
+                            "row_count": sql_result["row_count"],
+                        })
+
+                    # Update the entry
+                    entry["response"] = response_text
+                    entry["sql"] = generated_sql
+                    entry["rows"] = (sql_result or {}).get("rows")
+                    entry["row_count"] = (sql_result or {}).get("row_count")
+                    entry["warnings"] = warn_list
+                    entry["chart_config"] = chart_config
+                    entry["pending"] = False
+
+                    learning = accumulated.get("learning_candidate")
+                    if learning and learning.get("type") == "error_correction":
+                        entry["learning"] = learning.get("text", "")[:200]
+
+                    st.rerun()
+
+                except Exception as e:
+                    status_container.empty()
+                    error_msg = f"Error: {str(e)}"
+                    entry["response"] = error_msg
+                    entry["pending"] = False
+                    st.rerun()
+            else:
+                st.markdown(entry.get("response", ""))
+                if entry.get("sql"):
+                    with st.expander("🔍 SQL Query", expanded=False):
+                        st.code(entry["sql"], language="sql")
+                if entry.get("chart_config") and entry.get("rows"):
+                    fig = render_chart(entry["chart_config"], entry["rows"], palette_idx=idx)
+                    if fig:
+                        _display_chart_glass(fig)
+                if entry.get("rows"):
+                    with st.expander(f"📋 Raw Results ({entry.get('row_count', 0)} rows)", expanded=False):
+                        df = pd.DataFrame(entry["rows"])
+                        st.dataframe(df, width="stretch")
+                if entry.get("warnings"):
+                    with st.expander("⚠️ Warnings", expanded=False):
+                        for w in entry["warnings"]:
+                            st.warning(w)
+                if entry.get("learning"):
+                    st.info(f"📝 Learning saved: {entry['learning']}")
 
 # ── Chat Input ────────────────────────────────────────────────────────────────
 # Handle pending suggestion click
@@ -630,123 +705,15 @@ _pending = st.session_state.pop("_pending_input", None)
 user_input = st.chat_input("Ask a question about your data...") or _pending
 
 if user_input:
-    # Display user message
-    with st.chat_message("user"):
-        st.markdown(user_input)
-
-    # Run the graph with streaming
-    with st.chat_message("assistant"):
-        status_container = st.empty()
-        accumulated = {}
-
-        try:
-            initial_state = {
-                "messages": [HumanMessage(content=user_input)],
-                "intent": "",
-                "current_agent": "",
-                "knowledge_context": [],
-                "learnings_context": [],
-                "schema_context": "",
-                "generated_sql": "",
-                "validation_result": {},
-                "cost_estimate": {},
-                "sql_result": None,
-                "sql_error": None,
-                "insight": "",
-                "chart_config": None,
-                "retry_count": 0,
-                "learning_candidate": None,
-                "session_id": st.session_state.session_id,
-            }
-
-            # Stream node-by-node for live status updates
-            for event in st.session_state.graph.stream(initial_state):
-                for node_name, node_output in event.items():
-                    icon, label = _NODE_STATUS.get(node_name, ("⏳", f"Running {node_name}..."))
-                    status_container.markdown(
-                        f'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;">'
-                        f'<span style="font-size:1.2rem;">{icon}</span>'
-                        f'<span style="color:#94a3b8;font-size:0.95rem;">{label}</span>'
-                        f'<span class="pulse-dot"></span>'
-                        f'</div>',
-                        unsafe_allow_html=True,
-                    )
-                    if isinstance(node_output, dict):
-                        accumulated.update(node_output)
-
-            # Clear the status indicator
-            status_container.empty()
-
-            # Extract the response
-            response_text = accumulated.get("insight", "I couldn't generate a response.")
-
-            # Show the response
-            st.markdown(response_text)
-
-            # Render chart if interpreter produced one
-            chart_config = accumulated.get("chart_config")
-            generated_sql = accumulated.get("generated_sql", "")
-            sql_result = accumulated.get("sql_result")
-            logger = logging.getLogger("dash.chart")
-            logger.info("chart_config present: %s", chart_config is not None)
-            if chart_config:
-                logger.info("chart_config: %s", chart_config)
-            if chart_config and sql_result and sql_result.get("rows"):
-                fig = render_chart(chart_config, sql_result["rows"], palette_idx=len(st.session_state.rich_history))
-                logger.info("Figure created: %s", fig is not None)
-                if fig:
-                    _display_chart_glass(fig)
-
-            # Show SQL if one was generated
-            if generated_sql:
-                with st.expander("🔍 SQL Query", expanded=False):
-                    st.code(generated_sql, language="sql")
-
-                # Show raw results if available
-                if sql_result and sql_result.get("rows"):
-                    with st.expander(f"📋 Raw Results ({sql_result['row_count']} rows)", expanded=False):
-                        df = pd.DataFrame(sql_result["rows"])
-                        st.dataframe(df, width="stretch")
-
-                    # Add to SQL history
-                    st.session_state.sql_history.append({
-                        "sql": generated_sql,
-                        "row_count": sql_result["row_count"],
-                    })
-
-            # Show validation warnings
-            validation = accumulated.get("validation_result", {})
-            warn_list = validation.get("warnings", [])
-            if warn_list:
-                with st.expander("⚠️ Warnings", expanded=False):
-                    for w in warn_list:
-                        st.warning(w)
-
-            # Show learning candidate
-            learning = accumulated.get("learning_candidate")
-            if learning and learning.get("type") == "error_correction":
-                st.info(f"📝 Learning saved: {learning.get('text', '')[:200]}")
-
-            # Store rich history entry
-            st.session_state.rich_history.append({
-                "user_msg": user_input,
-                "response": response_text,
-                "sql": generated_sql,
-                "rows": (sql_result or {}).get("rows"),
-                "row_count": (sql_result or {}).get("row_count"),
-                "warnings": warn_list,
-                "chart_config": chart_config,
-            })
-
-        except Exception as e:
-            status_container.empty()
-            error_msg = f"Error: {str(e)}"
-            st.error(error_msg)
-            st.session_state.rich_history.append({
-                "user_msg": user_input,
-                "response": error_msg,
-                "sql": None,
-                "rows": None,
-                "row_count": None,
-                "warnings": [],
-            })
+    # Add empty/pending message to history
+    st.session_state.rich_history.append({
+        "user_msg": user_input,
+        "response": "",
+        "sql": None,
+        "rows": None,
+        "row_count": None,
+        "warnings": [],
+        "chart_config": None,
+        "pending": True
+    })
+    st.rerun()
