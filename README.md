@@ -1,6 +1,6 @@
 <div align="center">
   <h1>🧠 Dash: Self Learning Data Agents</h1>
-  <p><em>A self-learning data agent system built with LangGraph, Azure OpenAI, Snowflake, and ChromaDB.</em></p>
+  <p><em>A self-learning data agent system built with LangGraph, Azure OpenAI, Snowflake, and Qdrant.</em></p>
 
   <p>
     <a href="https://python.org/"><img src="https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white" alt="Python"></a>
@@ -8,7 +8,10 @@
     <a href="https://www.snowflake.com/"><img src="https://img.shields.io/badge/Snowflake-29B5E8.svg?logo=snowflake&logoColor=white" alt="Snowflake"></a>
     <a href="https://azure.microsoft.com/"><img src="https://img.shields.io/badge/Azure_OpenAI-0089D6.svg?logo=microsoft-azure&logoColor=white" alt="Azure"></a>
     <a href="https://www.langchain.com/langgraph"><img src="https://img.shields.io/badge/LangGraph-1C3C3C.svg?logo=langchain&logoColor=white" alt="LangGraph"></a>
+    <a href="https://qdrant.tech/"><img src="https://img.shields.io/badge/Qdrant-EF295F.svg?logo=qdrant&logoColor=white" alt="Qdrant"></a>
   </p>
+  
+  <img src="assets/Dash.png" alt="Dash Application Interface" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 </div>
 
 ---
@@ -65,7 +68,7 @@ User ──► Intent Classifier (gpt-4o-mini)
 | 🎼 **Orchestration** | **LangGraph** | StateGraph for routing and flow control |
 | 🧠 **LLM** | **Azure OpenAI** | `gpt-4o` (analyst, engineer, interpreter) + `gpt-4o-mini` (intent, leader) |
 | 🔤 **Embeddings** | **Azure OpenAI** | `text-embedding-3-small` |
-| 🗄️ **Vector Store** | **ChromaDB** | Local persistent storage for knowledge & learnings |
+| 🗄️ **Vector Store** | **Qdrant** | Persistent storage for knowledge & learnings (supports both local memory and Cloud) |
 | ❄️ **Database** | **Snowflake** | `SNOWFLAKE_SAMPLE_DATA.TPCDS_SF100TCL` (100TB) |
 | 🎨 **Frontend** | **Streamlit** | Interactive chat UI |
 
@@ -112,7 +115,7 @@ Dash-LangGraph/
 │       └── engineer.py           # Creates views in DASH schema (gpt-4o)
 │
 ├── vectorstore/
-│   └── __init__.py               # ChromaDB wrapper (knowledge + learnings)
+│   └── __init__.py               # Qdrant wrapper (knowledge + learnings)
 │
 ├── knowledge/
 │   ├── tables/                   # 24 table metadata JSONs (all TPC-DS tables)
@@ -123,7 +126,7 @@ Dash-LangGraph/
 ├── scripts/
 │   ├── snowflake_setup.sql       # Snowflake setup (warehouse, roles, grants)
 │   ├── cache_schema.py           # One-time schema fetch → JSON
-│   └── load_knowledge.py         # Embed knowledge into ChromaDB
+│   └── load_knowledge.py         # Embed knowledge into Qdrant
 │
 ├── .env.example                  # Environment variable template
 └── .gitignore
@@ -168,7 +171,7 @@ Run `scripts/snowflake_setup.sql` in a Snowflake worksheet as **ACCOUNTADMIN**. 
 Cache the schema to avoid expensive queries, and load knowledge into ChromaDB:
 ```bash
 python scripts/cache_schema.py
-python scripts/load_knowledge.py
+python scripts/load_knowledge.py --recreate
 ```
 
 ### 6. Launch App
@@ -192,7 +195,7 @@ Running on a 100TB dataset requires aggressive cost controls:
 | **1. Knowledge-first** | Skip SQL generation | Pre-validated queries matched via semantic search. |
 | **2. SQL Validator** | Prevent expensive scans | Auto-injects `LIMIT`, warns on missing date filters, blocks DML. |
 | **3. Schema Cache** | Avoid info queries | Fetched once, stored as local JSON, kept in memory. |
-| **4. Local Vector Store**| Zero Snowflake cost | ChromaDB runs locally, singleton client eliminates repeated I/O. |
+| **4. Vector Store**| Zero Snowflake cost | Qdrant stores pre-calculated vectors. Fallbacks to in-memory for testing, saving I/O. |
 
 **Performance Gains:** Connection pooling, LLM singletons, and memory caching reduce per-request overhead, bringing response times down to ~18-20s after an initial warmup.
 
@@ -204,7 +207,7 @@ The `Learning Evaluator` node captures two types of data:
 1. 🐛 **Error Corrections**: When a SQL error is fixed after a retry, the `error → fix` pattern is saved.
 2. 🎯 **Successful Patterns**: When a query runs successfully, it's saved as a reusable pattern.
 
-These are stored in ChromaDB and retrieved by the Context node for future queries.
+These are stored in Qdrant and retrieved by the Context node for future queries.
 
 ---
 
@@ -237,3 +240,5 @@ Try these out in the Streamlit app:
 | `SNOWFLAKE_SCHEMA` | Schema name | `TPCDS_SF100TCL` |
 | `SNOWFLAKE_WAREHOUSE` | Warehouse name | `COMPUTE_WH` |
 | `SNOWFLAKE_ROLE` | Default role | `SYSADMIN` |
+| `QDRANT_URL` | Qdrant Cluster URL | *Optional (defaults to memory)* |
+| `QDRANT_API_KEY` | Qdrant API Key | *Optional* |
