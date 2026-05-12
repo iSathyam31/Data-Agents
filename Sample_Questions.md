@@ -19,8 +19,8 @@ Here are some example questions you can ask the Dash agent in the Streamlit UI t
 ### Customers & Demographics
 * *"Break down store sales revenue by customer income band for 2001."*
 * *"Which customer education level drives the most catalog sales?"*
-* *"Show me revenue from preferred customers vs. non-preferred customers."*  ----- TAKING A LOT OF TIME
-* *"Who are our top 20 highest-value customers by total spend?"* ---- TAKING A LOT OF TIME
+* *"Show me revenue from preferred customers vs. non-preferred customers."*
+* *"Who are our top 20 highest-value customers by total spend?"*
 
 ### Promotions & Inventory
 * *"Which promotions generated the highest incremental revenue in 2001?"*
