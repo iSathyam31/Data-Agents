@@ -3,150 +3,176 @@
 import json
 import os
 import sys
-from pathlib import Path
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
+# Add project root to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from dash_strands.knowledge.store import get_knowledge_collection
-
-KNOWLEDGE_DIR = Path(__file__).parent.parent / "knowledge"
+from vectorstore import upsert_knowledge, get_knowledge_collection
 
 
-def load_tables():
-    """Load table metadata JSON files from knowledge/tables/."""
-    tables_dir = KNOWLEDGE_DIR / "tables"
-    if not tables_dir.exists():
-        print("  No tables/ directory found, skipping.")
-        return
+KNOWLEDGE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "knowledge")
 
-    collection = get_knowledge_collection()
+
+def load_table_knowledge():
+    """Load table metadata JSON files into ChromaDB."""
+    tables_dir = os.path.join(KNOWLEDGE_DIR, "tables")
+    if not os.path.exists(tables_dir):
+        print("No tables directory found.")
+        return 0
+
     count = 0
-    for f in sorted(tables_dir.glob("*.json")):
-        data = json.loads(f.read_text(encoding="utf-8"))
-        name = data.get("table_name", f.stem)
+    for filename in os.listdir(tables_dir):
+        if not filename.endswith(".json"):
+            continue
+        filepath = os.path.join(tables_dir, filename)
+        with open(filepath, "r") as f:
+            table_data = json.load(f)
 
-        doc_parts = [f"Table: {name}"]
-        if desc := data.get("table_description"):
-            doc_parts.append(f"Description: {desc}")
-        if uses := data.get("use_cases"):
-            doc_parts.append(f"Use cases: {', '.join(uses)}")
-        if notes := data.get("data_quality_notes"):
-            doc_parts.append("Data quality notes:\n- " + "\n- ".join(notes))
-        if cols := data.get("table_columns"):
-            col_lines = [
-                f"  {c['name']}: {c['type']} — {c.get('description', '')}"
-                for c in cols
-            ]
-            doc_parts.append("Columns:\n" + "\n".join(col_lines))
+        table_name = table_data.get("table_name", filename.replace(".json", ""))
 
-        doc = "\n\n".join(doc_parts)
-        collection.upsert(
-            ids=[f"table_{name}"],
-            documents=[doc],
-            metadatas=[{"source": "table_metadata", "name": name}],
+        # Build a rich text document for embedding
+        doc_parts = [
+            f"Table: {table_name}",
+            f"Description: {table_data.get('table_description', '')}",
+        ]
+        if table_data.get("use_cases"):
+            doc_parts.append(f"Use cases: {', '.join(table_data['use_cases'])}")
+        if table_data.get("data_quality_notes"):
+            doc_parts.append(f"Data quality notes: {'; '.join(table_data['data_quality_notes'])}")
+        if table_data.get("key_columns"):
+            cols = [f"{c['name']} ({c['type']}): {c['description']}" for c in table_data["key_columns"]]
+            doc_parts.append(f"Key columns: {'; '.join(cols)}")
+
+        doc_text = "\n".join(doc_parts)
+        doc_id = f"table-{table_name.lower()}"
+
+        upsert_knowledge(
+            doc_id=doc_id,
+            text=doc_text,
+            metadata={"type": "table", "table_name": table_name, "source": filename},
         )
         count += 1
-        print(f"  Loaded table: {name}")
+        print(f"  Loaded table: {table_name}")
 
-    print(f"  {count} table metadata files loaded.")
+    return count
 
 
-def load_queries():
-    """Load validated SQL query files from knowledge/queries/."""
-    queries_dir = KNOWLEDGE_DIR / "queries"
-    if not queries_dir.exists():
-        print("  No queries/ directory found, skipping.")
-        return
+def load_query_knowledge():
+    """Load validated SQL query files into ChromaDB."""
+    queries_dir = os.path.join(KNOWLEDGE_DIR, "queries")
+    if not os.path.exists(queries_dir):
+        print("No queries directory found.")
+        return 0
 
-    collection = get_knowledge_collection()
     count = 0
-    for f in sorted(queries_dir.glob("*.sql")):
-        content = f.read_text(encoding="utf-8")
-        name = f.stem
+    for filename in os.listdir(queries_dir):
+        if not filename.endswith(".sql"):
+            continue
+        filepath = os.path.join(queries_dir, filename)
+        with open(filepath, "r") as f:
+            content = f.read()
+
+        # Parse the custom format
+        query_name = filename.replace(".sql", "")
         description = ""
-
         for line in content.split("\n"):
-            line_s = line.strip()
-            if line_s.startswith("-- <query ") and line_s.endswith(">"):
-                name = line_s[len("-- <query "):-1].strip()
-            elif line_s.startswith("-- <description>") and line_s.endswith("</description>"):
-                description = line_s[len("-- <description>"):-len("</description>")].strip()
+            if "<description>" in line:
+                description = line.split("<description>")[1].split("</description>")[0].strip()
+                break
 
-        doc = f"Query: {name}\nDescription: {description}\n\nSQL:\n{content}"
-        collection.upsert(
-            ids=[f"query_{name}"],
-            documents=[doc],
-            metadatas=[{"source": "validated_query", "name": name}],
+        doc_text = f"Validated Query: {query_name}\nDescription: {description}\n\n{content}"
+        doc_id = f"query-{query_name}"
+
+        upsert_knowledge(
+            doc_id=doc_id,
+            text=doc_text,
+            metadata={"type": "query", "query_name": query_name, "source": filename},
         )
         count += 1
-        print(f"  Loaded query: {name}")
+        print(f"  Loaded query: {query_name}")
 
-    print(f"  {count} validated query files loaded.")
+    return count
 
 
-def load_business_rules():
-    """Load business rules JSON files from knowledge/business/."""
-    business_dir = KNOWLEDGE_DIR / "business"
-    if not business_dir.exists():
-        print("  No business/ directory found, skipping.")
-        return
+def load_business_knowledge():
+    """Load business rules JSON files into ChromaDB."""
+    business_dir = os.path.join(KNOWLEDGE_DIR, "business")
+    if not os.path.exists(business_dir):
+        print("No business directory found.")
+        return 0
 
-    collection = get_knowledge_collection()
     count = 0
-    for f in sorted(business_dir.glob("*.json")):
-        data = json.loads(f.read_text(encoding="utf-8"))
-        doc_parts = []
+    for filename in os.listdir(business_dir):
+        if not filename.endswith(".json"):
+            continue
+        filepath = os.path.join(business_dir, filename)
+        with open(filepath, "r") as f:
+            biz_data = json.load(f)
 
-        if metrics := data.get("metrics"):
-            for m in metrics:
-                doc_parts.append(
-                    f"Metric: {m['name']}\n"
-                    f"Definition: {m.get('definition', '')}\n"
-                    f"Calculation: {m.get('calculation', '')}"
-                )
-        if gotchas := data.get("common_gotchas"):
-            for g in gotchas:
-                doc_parts.append(f"Gotcha: {g['issue']}\nSolution: {g['solution']}")
+        # Build document from metrics
+        doc_parts = [f"Business Rules: {biz_data.get('domain', 'Unknown')}"]
+        doc_parts.append(f"Description: {biz_data.get('description', '')}")
 
-        if doc_parts:
-            doc = "\n\n".join(doc_parts)
-            collection.upsert(
-                ids=[f"business_{f.stem}"],
-                documents=[doc],
-                metadatas=[{"source": "business_rules", "name": f.stem}],
-            )
-            count += 1
-            print(f"  Loaded business rules: {f.stem}")
+        if biz_data.get("metrics"):
+            for m in biz_data["metrics"]:
+                doc_parts.append(f"\nMetric: {m['name']}")
+                doc_parts.append(f"  Definition: {m.get('definition', '')}")
+                doc_parts.append(f"  Calculation: {m.get('calculation', '')}")
+                if m.get("notes"):
+                    doc_parts.append(f"  Notes: {m['notes']}")
 
-    print(f"  {count} business rule files loaded.")
+        if biz_data.get("common_gotchas"):
+            doc_parts.append("\nCommon Gotchas:")
+            for g in biz_data["common_gotchas"]:
+                doc_parts.append(f"  Issue: {g['issue']}")
+                doc_parts.append(f"  Solution: {g['solution']}")
+
+        if biz_data.get("join_patterns"):
+            doc_parts.append("\nJoin Patterns:")
+            for name, pattern in biz_data["join_patterns"].items():
+                doc_parts.append(f"  {name}: {pattern}")
+
+        doc_text = "\n".join(doc_parts)
+        doc_id = f"business-{filename.replace('.json', '')}"
+
+        upsert_knowledge(
+            doc_id=doc_id,
+            text=doc_text,
+            metadata={"type": "business_rules", "source": filename},
+        )
+        count += 1
+        print(f"  Loaded business rules: {filename}")
+
+    return count
 
 
-def load_knowledge():
-    print("Loading knowledge into ChromaDB...")
-    load_tables()
-    load_queries()
-    load_business_rules()
-    print("Done.")
+def main(recreate: bool = False):
+    """Main entry point for loading knowledge."""
+    if recreate:
+        print("Recreating knowledge collection...")
+        collection = get_knowledge_collection()
+        # Delete all existing documents
+        existing = collection.get()
+        if existing["ids"]:
+            collection.delete(ids=existing["ids"])
+        print("  Cleared existing knowledge.\n")
+
+    print("Loading table knowledge...")
+    table_count = load_table_knowledge()
+    print(f"  → {table_count} tables loaded.\n")
+
+    print("Loading query knowledge...")
+    query_count = load_query_knowledge()
+    print(f"  → {query_count} queries loaded.\n")
+
+    print("Loading business rules...")
+    biz_count = load_business_knowledge()
+    print(f"  → {biz_count} business rule files loaded.\n")
+
+    total = table_count + query_count + biz_count
+    print(f"Done. {total} knowledge documents loaded into ChromaDB.")
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Load knowledge files into ChromaDB.")
-    parser.add_argument(
-        "--recreate",
-        action="store_true",
-        help="Delete and recreate the dash_knowledge collection before loading.",
-    )
-    args = parser.parse_args()
-
-    if args.recreate:
-        from dash_strands.knowledge.store import _get_chroma_client
-        client = _get_chroma_client()
-        try:
-            client.delete_collection("dash_knowledge")
-            print("Deleted existing dash_knowledge collection.")
-        except Exception:
-            pass  # collection didn't exist yet
-
-    load_knowledge()
+    recreate = "--recreate" in sys.argv
+    main(recreate=recreate)
